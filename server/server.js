@@ -46,7 +46,7 @@ app.use('/api/', limiter);
 app.use(express.static(path.join(__dirname, '../public')));
 
 // 健康检查端点
-app.get('/health', (req, res) => {
+app.get('api/health', (req, res) => {
   res.json({ 
     status: 'healthy',
     service: 'donation-collection-system',
@@ -83,7 +83,7 @@ app.get('/api/test', async (req, res) => {
 });
 
 // 主页路由
-app.get('/', (req, res) => {
+app.get('api/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
