@@ -404,4 +404,28 @@ router.get('/export/csv', ensureDatabase, async (req, res) => {
   }
 });
 
+// 在 routes.js 文件中添加
+router.get('/test', ensureDatabase, async (req, res) => {
+  try {
+    await database.connect();
+    const collections = await database.db.listCollections().toArray();
+    res.json({ 
+      success: true, 
+      message: '服务器和数据库连接正常',
+      database: {
+        name: database.db.databaseName,
+        collections: collections.map(c => c.name)
+      },
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: '数据库连接失败',
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 module.exports = router;
