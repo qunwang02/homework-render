@@ -34,13 +34,22 @@ if (process.env.NODE_ENV !== 'production') {
   app.use(morgan('dev'));
 }
 
-// 速率限制
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
-  message: '请求过于频繁，请稍后再试'
+  message: { success: false, error: '请求过于频繁，请稍后再试' }, // 保持JSON格式
+  standardHeaders: true,
+  legacyHeaders: false,
+  // 🔐 关键修复配置：
+  validate: { trustProxy: false }, // 告诉限流器我们已自行处理代理信任问题
+  keyGenerator: (req, res) => {
+    // 从X-Forwarded-For头部安全地提取客户端IP
+    const forwarded = req.headers['x-forwarded-for'];
+    const clientIp = forwarded ? forwarded.split(',')[0].trim() : req.ip;
+    console.log(`[限流] 客户端IP: ${clientIp}`); // 可选：日志记录
+    return clientIp;
+  }
 });
-app.use('/api/', limiter);
 
 // 静态文件服务
 app.use(express.static(path.join(__dirname, '../public')));
