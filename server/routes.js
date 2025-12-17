@@ -82,7 +82,7 @@ router.post('/submit', ensureDatabase, async (req, res) => {
   console.log('📥 [提交] 请求体:', JSON.stringify(req.body, null, 2));
   
   try {
-    const db = database.db; // 直接使用已连接的数据库实例
+    const db = database.db;
     
     if (!db) {
       throw new Error('数据库实例不存在');
@@ -138,6 +138,35 @@ router.post('/submit', ensureDatabase, async (req, res) => {
       insertedCount: result.insertedCount
     });
     
+    // 立即验证 - 方法1：直接查询
+    console.log('🔍 [提交] 立即验证数据...');
+    const insertedDoc = await homeworkCollection.findOne({ _id: result.insertedId });
+    
+    if (insertedDoc) {
+      console.log('✅ [提交] 数据验证成功，已插入数据库');
+      console.log('📋 [提交] 插入的数据:', {
+        _id: insertedDoc._id.toString(),
+        date: insertedDoc.date,
+        name: insertedDoc.name,
+        submitTime: insertedDoc.submitTime
+      });
+    } else {
+      console.log('❌ [提交] 数据验证失败，未找到插入的数据');
+    }
+    
+    // 方法2：统计总数
+    const totalCount = await homeworkCollection.countDocuments({});
+    console.log(`📊 [提交] 当前总记录数: ${totalCount}`);
+    
+    // 方法3：查找最近5条记录
+    const recentRecords = await homeworkCollection
+      .find({})
+      .sort({ submittedAt: -1 })
+      .limit(5)
+      .toArray();
+    
+    console.log('📋 [提交] 最近5条记录ID:', recentRecords.map(r => r._id.toString()));
+    
     // 记录日志
     try {
       await db.collection('homework_logs').insertOne({
@@ -146,23 +175,24 @@ router.post('/submit', ensureDatabase, async (req, res) => {
         name: record.name,
         date: record.date,
         timestamp: now,
-        ip: req.ip
+        ip: req.ip,
+        clientInfo: req.headers['user-agent']
       });
       console.log('📊 [提交] 日志记录成功');
     } catch (logError) {
       console.warn('⚠️ [提交] 日志记录失败（不影响主流程）:', logError.message);
     }
     
-    // 验证数据是否真的插入
-    const insertedDoc = await homeworkCollection.findOne({ _id: result.insertedId });
-    console.log('🔍 [提交] 验证插入的数据:', insertedDoc ? '找到数据' : '未找到数据');
-    
     res.json({
       success: true,
       message: '功课记录提交成功',
       recordId: result.insertedId,
       timestamp: now.toISOString(),
-      data: insertedDoc
+      verification: {
+        found: !!insertedDoc,
+        totalCount: totalCount,
+        recentRecordIds: recentRecords.map(r => r._id.toString())
+      }
     });
     
   } catch (error) {
@@ -504,5 +534,91 @@ router.get('/export/csv', ensureDatabase, async (req, res) => {
 
 // 注意：删除了重复的 delete 路由定义
 // 只在前面定义一次即可
+// 直接查询数据库状态
+router.get('/debug/db-status', ensureDatabase, async (req, res) => {
+  try {
+    const db = database.db;
+    
+    // 获取数据库信息
+    const dbStats = await db.command({ dbStats: 1 });
+    
+    // 获取集合信息
+    const collections = await db.listCollections().toArray();
+    
+    // 获取每个集合的文档数量
+    const collectionStats = [];
+    for (const collInfo of collections) {
+      const collection = db.collection(collInfo.name);
+      const count = await collection.countDocuments({});
+      const sample = await collection.find({}).limit(1).toArray();
+      
+      collectionStats.push({
+        name: collInfo.name,
+        count: count,
+        sample: sample.length > 0 ? sample[0] : null
+      });
+    }
+    
+    res.json({
+      success: true,
+      timestamp: new Date().toISOString(),
+      database: {
+        name: db.databaseName,
+        stats: {
+          collections: dbStats.collections,
+          objects: dbStats.objects,
+          dataSize: dbStats.dataSize,
+          storageSize: dbStats.storageSize
+        }
+      },
+      collections: collectionStats
+    });
+    
+  } catch (error) {
+    console.error('❌ [调试] 获取数据库状态失败:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
 
+// 直接运行 MongoDB 查询
+router.get('/debug/query', ensureDatabase, async (req, res) => {
+  try {
+    const db = database.db;
+    const collection = db.collection('homework_records');
+    
+    // 运行几个不同的查询
+    const queries = {
+      totalCount: await collection.countDocuments({}),
+      todayCount: await collection.countDocuments({ 
+        date: new Date().toISOString().split('T')[0] 
+      }),
+      allRecords: await collection.find({}).sort({ submittedAt: -1 }).limit(10).toArray(),
+      rawQuery: await collection.find({}).toArray()
+    };
+    
+    console.log('🔍 [调试] 查询结果:', {
+      totalCount: queries.totalCount,
+      todayCount: queries.todayCount,
+      sampleCount: queries.allRecords.length
+    });
+    
+    res.json({
+      success: true,
+      timestamp: new Date().toISOString(),
+      queries: queries
+    });
+    
+  } catch (error) {
+    console.error('❌ [调试] 查询失败:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
 module.exports = router;
