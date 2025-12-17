@@ -15,6 +15,7 @@ const app = express();
 		  directives: {
 			defaultSrc: ["'self'"],
 			scriptSrc: ["'self'", "'unsafe-inline'"], // 允许内联脚本
+			 scriptSrcAttr: ["'unsafe-inline'"], // ⭐ 新增：允许onclick等内联事件处理器
 			styleSrc: ["'self'", "'unsafe-inline'"],
 			imgSrc: ["'self'", "data:", "https:"],
 		  },
