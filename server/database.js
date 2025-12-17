@@ -9,7 +9,7 @@ class HomeworkDatabase {
   }
 
   async connect() {
-    if (this.isConnected) {
+    if (this.isConnected && this.db) {
       console.log('✅ 已连接到功课数据库');
       return this.db;
     }
@@ -29,13 +29,13 @@ class HomeworkDatabase {
     }
     
     this.connecting = true;
+    console.log('🔗 开始连接数据库...');
     
     try {
-      // 功课系统使用 homework_db
       const uri = process.env.MONGODB_URI || 'mongodb+srv://nanmo009:Wwx731217@cluster-fosheng.r3b5crc.mongodb.net/?retryWrites=true&w=majority&appName=cluster-fosheng';
-      const dbName = process.env.DATABASE_NAME || 'homework_db'; // 功课数据库
+      const dbName = process.env.DATABASE_NAME || 'homework_db';
       
-      console.log(`🔗 正在连接到功课数据库: ${dbName}`);
+      console.log(`🔗 连接到数据库: ${dbName}`);
       
       this.client = new MongoClient(uri, {
         serverApi: {
@@ -48,36 +48,60 @@ class HomeworkDatabase {
       });
       
       await this.client.connect();
+      console.log('✅ MongoDB连接建立成功');
+      
       this.db = this.client.db(dbName);
       this.isConnected = true;
       this.connecting = false;
       
+      // 测试连接
       await this.db.command({ ping: 1 });
+      console.log('✅ 数据库ping成功');
       
-      console.log('✅ 功课数据库连接成功');
-      console.log(`📁 数据库: ${dbName}`);
+      // 初始化集合
+      await this.initHomeworkCollections();
+      
+      console.log(`✅ 功课数据库连接成功: ${dbName}`);
       
       return this.db;
     } catch (error) {
       this.connecting = false;
-      console.error('❌ 功课数据库连接失败:', error.message);
+      console.error('❌ 功课数据库连接失败:', {
+        error: error.message,
+        stack: error.stack
+      });
       throw error;
     }
   }
 
   // 初始化功课集合
   async initHomeworkCollections() {
-    const collections = await this.db.listCollections().toArray();
-    const collectionNames = collections.map(c => c.name);
-    
-    if (!collectionNames.includes('homework_records')) {
-      await this.db.createCollection('homework_records');
-      console.log('✅ 创建homework_records集合');
-    }
-    
-    if (!collectionNames.includes('homework_logs')) {
-      await this.db.createCollection('homework_logs');
-      console.log('✅ 创建homework_logs集合');
+    try {
+      const collections = await this.db.listCollections().toArray();
+      const collectionNames = collections.map(c => c.name);
+      
+      if (!collectionNames.includes('homework_records')) {
+        await this.db.createCollection('homework_records');
+        console.log('✅ 创建 homework_records 集合');
+      } else {
+        console.log('✅ homework_records 集合已存在');
+      }
+      
+      if (!collectionNames.includes('homework_logs')) {
+        await this.db.createCollection('homework_logs');
+        console.log('✅ 创建 homework_logs 集合');
+      } else {
+        console.log('✅ homework_logs 集合已存在');
+      }
+      
+      // 为 homework_records 创建索引
+      await this.db.collection('homework_records').createIndex({ name: 1 });
+      await this.db.collection('homework_records').createIndex({ date: 1 });
+      await this.db.collection('homework_records').createIndex({ submittedAt: -1 });
+      console.log('✅ 数据库索引创建完成');
+      
+    } catch (error) {
+      console.error('❌ 初始化集合失败:', error.message);
     }
   }
 
@@ -102,27 +126,21 @@ class HomeworkDatabase {
 
   // 功课记录集合
   homeworkRecords() {
-    return this.getCollection('homework_records');
+    if (!this.db) {
+      throw new Error('数据库未连接');
+    }
+    return this.db.collection('homework_records');
   }
 
   // 功课日志集合
   homeworkLogs() {
-    return this.getCollection('homework_logs');
+    if (!this.db) {
+      throw new Error('数据库未连接');
+    }
+    return this.db.collection('homework_logs');
   }
 }
 
 const homeworkDatabase = new HomeworkDatabase();
-
-// 自动重连
-setInterval(async () => {
-  if (!homeworkDatabase.isConnected && !homeworkDatabase.connecting) {
-    try {
-      console.log('🔄 尝试自动重新连接功课数据库...');
-      await homeworkDatabase.connect();
-    } catch (error) {
-      console.log('自动重连失败，稍后重试...');
-    }
-  }
-}, 60000);
 
 module.exports = homeworkDatabase;
