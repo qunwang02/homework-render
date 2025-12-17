@@ -78,12 +78,22 @@ async function ensureDatabase(req, res, next) {
 
 // 提交功课记录
 router.post('/submit', ensureDatabase, async (req, res) => {
+  console.log('📥 [提交] 收到提交请求');
+  console.log('📥 [提交] 请求体:', JSON.stringify(req.body, null, 2));
+  
   try {
-    const homeworkCollection = database.homeworkRecords();
+    const db = database.db; // 直接使用已连接的数据库实例
+    
+    if (!db) {
+      throw new Error('数据库实例不存在');
+    }
+    
+    const homeworkCollection = db.collection('homework_records');
     const record = req.body;
     
     // 验证必要字段
     if (!record.date || !record.name) {
+      console.log('❌ [提交] 缺少必要字段:', { date: record.date, name: record.name });
       return res.status(400).json({
         success: false,
         error: '日期和姓名是必填项',
@@ -92,15 +102,12 @@ router.post('/submit', ensureDatabase, async (req, res) => {
     }
     
     const now = new Date();
+    console.log('📝 [提交] 正在准备数据...');
+    
+    // 准备数据
     const homeworkRecord = {
-      ...record,
-      submitTime: now,
-      submittedAt: now,
-      createdAt: now,
-      updatedAt: now,
-      deviceId: record.deviceId || 'web',
-      syncStatus: 'synced',
-      // 确保数字字段是数字类型
+      date: record.date,
+      name: record.name,
       nineWord: parseInt(record.nineWord) || 0,
       buddhaWorship: parseInt(record.buddhaWorship) || 0,
       quietZen: parseInt(record.quietZen) || 0,
@@ -109,33 +116,66 @@ router.post('/submit', ensureDatabase, async (req, res) => {
       amitabha: parseInt(record.amitabha) || 0,
       guanyin: parseInt(record.guanyin) || 0,
       puxian: parseInt(record.puxian) || 0,
-      dizang: parseInt(record.dizang) || 0
+      dizang: parseInt(record.dizang) || 0,
+      remark: record.remark || '',
+      deviceId: record.deviceId || 'web',
+      submitTime: now,
+      submittedAt: now,
+      createdAt: now,
+      updatedAt: now,
+      syncStatus: 'synced'
     };
     
+    console.log('📝 [提交] 准备插入的数据:', JSON.stringify(homeworkRecord, null, 2));
+    
+    // 尝试插入
+    console.log('💾 [提交] 正在插入数据...');
     const result = await homeworkCollection.insertOne(homeworkRecord);
     
-    // 记录日志
-    await database.homeworkLogs().insertOne({
-      type: 'homework_submit',
-      recordId: result.insertedId,
-      name: record.name,
-      date: record.date,
-      timestamp: now,
-      ip: req.ip
+    console.log('✅ [提交] 插入成功:', {
+      insertedId: result.insertedId,
+      acknowledged: result.acknowledged,
+      insertedCount: result.insertedCount
     });
+    
+    // 记录日志
+    try {
+      await db.collection('homework_logs').insertOne({
+        type: 'homework_submit',
+        recordId: result.insertedId,
+        name: record.name,
+        date: record.date,
+        timestamp: now,
+        ip: req.ip
+      });
+      console.log('📊 [提交] 日志记录成功');
+    } catch (logError) {
+      console.warn('⚠️ [提交] 日志记录失败（不影响主流程）:', logError.message);
+    }
+    
+    // 验证数据是否真的插入
+    const insertedDoc = await homeworkCollection.findOne({ _id: result.insertedId });
+    console.log('🔍 [提交] 验证插入的数据:', insertedDoc ? '找到数据' : '未找到数据');
     
     res.json({
       success: true,
       message: '功课记录提交成功',
       recordId: result.insertedId,
-      timestamp: now.toISOString()
+      timestamp: now.toISOString(),
+      data: insertedDoc
     });
     
   } catch (error) {
-    console.error('提交功课记录错误:', error);
+    console.error('❌ [提交] 提交失败:', {
+      error: error.message,
+      stack: error.stack,
+      name: error.name,
+      code: error.code
+    });
     res.status(500).json({
       success: false,
       error: error.message,
+      code: error.code,
       timestamp: new Date().toISOString()
     });
   }
