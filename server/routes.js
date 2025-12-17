@@ -3,7 +3,63 @@ const router = express.Router();
 const database = require('./database');
 const { ObjectId } = require('mongodb');
 
-// 确保数据库连接
+// ================== 基础健康检查路由 ==================
+
+// 健康检查端点
+router.get('/health', async (req, res) => {
+  try {
+    // 尝试连接数据库
+    await database.connect();
+    const db = database.db;
+    
+    // 检查数据库连接
+    const pingResult = await db.command({ ping: 1 });
+    
+    res.json({
+      success: true,
+      message: '服务器和数据库运行正常',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      database: {
+        connected: true,
+        ping: pingResult.ok === 1 ? '正常' : '异常',
+        dbName: db.databaseName
+      }
+    });
+  } catch (error) {
+    res.status(503).json({
+      success: false,
+      message: '服务器运行正常，但数据库连接异常',
+      timestamp: new Date().toISOString(),
+      error: error.message
+    });
+  }
+});
+
+// 测试端点
+router.get('/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'API测试成功',
+    timestamp: new Date().toISOString(),
+    data: {
+      status: 'active',
+      version: '1.0.0',
+      endpoints: [
+        '/api/health',
+        '/api/test',
+        '/api/submit',
+        '/api/records',
+        '/api/update',
+        '/api/delete',
+        '/api/stats',
+        '/api/export/csv'
+      ]
+    }
+  });
+});
+
+// 确保数据库连接的中间件
 async function ensureDatabase(req, res, next) {
   try {
     await database.connect();
@@ -17,6 +73,8 @@ async function ensureDatabase(req, res, next) {
     });
   }
 }
+
+// ================== 功课相关路由 ==================
 
 // 提交功课记录
 router.post('/submit', ensureDatabase, async (req, res) => {
@@ -194,7 +252,7 @@ router.put('/update', ensureDatabase, async (req, res) => {
   }
 });
 
-// 删除功课记录
+// 删除功课记录（注意：原始代码中有重复定义，这里使用ensureDatabase版本）
 router.delete('/delete', ensureDatabase, async (req, res) => {
   try {
     const homeworkCollection = database.homeworkRecords();
@@ -404,32 +462,7 @@ router.get('/export/csv', ensureDatabase, async (req, res) => {
   }
 });
 
-module.exports = router;
-// 删除记录
-router.delete('/delete', async (req, res) => {
-  try {
-    await database.connect();
-    const homeworkCollection = database.homeworkRecords();
-    
-    const { id } = req.body;
-    
-    const result = await homeworkCollection.deleteOne({ 
-      _id: new ObjectId(id) 
-    });
-    
-    res.json({
-      success: true,
-      deletedCount: result.deletedCount,
-      message: '记录删除成功'
-    });
-    
-  } catch (error) {
-    console.error('删除错误:', error);
-    res.status(500).json({
-      success: false,
-      error: error.message
-    });
-  }
-});
+// 注意：删除了重复的 delete 路由定义
+// 只在前面定义一次即可
 
 module.exports = router;
