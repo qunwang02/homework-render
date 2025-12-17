@@ -6,9 +6,6 @@
   "scripts": {
     "start": "node server/server.js",
     "dev": "nodemon server/server.js",
-    "clean": "rm -rf node_modules package-lock.json && npm cache clean --force",
-    "reinstall": "npm run clean && npm install",
-    "reset": "npm run clean && npm install && npm start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
