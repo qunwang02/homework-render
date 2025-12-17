@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据验证页面</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .section { background: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 10px; }
+        button { background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #0056b3; }
+        .result { white-space: pre-wrap; font-family: monospace; background: white; padding: 10px; border-radius: 4px; }
+        .success { border-left: 5px solid #28a745; }
+        .error { border-left: 5px solid #dc3545; }
+    </style>
+</head>
+<body>
+    <h1>数据验证页面</h1>
+    
+    <div class="section">
+        <h2>1. 测试提交数据</h2>
+        <button onclick="testSubmit()">测试提交</button>
+        <div id="submitResult" class="result"></div>
+    </div>
+    
+    <div class="section">
+        <h2>2. 查询数据库状态</h2>
+        <button onclick="queryDbStatus()">查询数据库状态</button>
+        <div id="dbStatusResult" class="result"></div>
+    </div>
+    
+    <div class="section">
+        <h2>3. 直接查询记录</h2>
+        <button onclick="queryRecords()">查询所有记录</button>
+        <div id="queryResult" class="result"></div>
+    </div>
+    
+    <div class="section">
+        <h2>4. 检查集合信息</h2>
+        <button onclick="checkCollections()">检查集合</button>
+        <div id="collectionsResult" class="result"></div>
+    </div>
+
+    <script>
+        function displayResult(elementId, data, isSuccess = true) {
+            const element = document.getElementById(elementId);
+            element.textContent = JSON.stringify(data, null, 2);
+            element.className = `result ${isSuccess ? 'success' : 'error'}`;
+        }
+
+        async function testSubmit() {
+            const data = {
+                date: new Date().toISOString().split('T')[0],
+                name: '验证用户' + Math.floor(Math.random() * 1000),
+                nineWord: Math.floor(Math.random() * 1000),
+                diamond: Math.floor(Math.random() * 5),
+                remark: '验证测试 ' + new Date().toLocaleString(),
+                deviceId: 'verify-page'
+            };
+
+            try {
+                const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                displayResult('submitResult', result, result.success);
+            } catch (error) {
+                displayResult('submitResult', { error: error.message }, false);
+            }
+        }
+
+        async function queryDbStatus() {
+            try {
+                const response = await fetch('/api/debug/db-status');
+                const result = await response.json();
+                displayResult('dbStatusResult', result, result.success);
+            } catch (error) {
+                displayResult('dbStatusResult', { error: error.message }, false);
+            }
+        }
+
+        async function queryRecords() {
+            try {
+                const response = await fetch('/api/debug/query');
+                const result = await response.json();
+                displayResult('queryResult', result, result.success);
+            } catch (error) {
+                displayResult('queryResult', { error: error.message }, false);
+            }
+        }
+
+        async function checkCollections() {
+            try {
+                const response = await fetch('/api/records?limit=100');
+                const result = await response.json();
+                displayResult('collectionsResult', result, result.success);
+            } catch (error) {
+                displayResult('collectionsResult', { error: error.message }, false);
+            }
+        }
+    </script>
+</body>
+</html>
