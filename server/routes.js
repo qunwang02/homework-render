@@ -428,4 +428,16 @@ router.get('/test', ensureDatabase, async (req, res) => {
   }
 });
 
+// 健康检查端点 (添加到 routes.js)
+router.get('/health', (req, res) => {
+  res.json({ 
+    status: 'healthy',
+    service: 'homework-collection-system', // 建议与您的项目名一致
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    nodeVersion: process.version,
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 module.exports = router;
