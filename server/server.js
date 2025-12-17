@@ -8,27 +8,6 @@ const database = require('./database'); // 立即导入
 
 const app = express();
 
-// 在启动服务器时确保数据库连接
-app.listen(PORT, async () => {
-  console.log(`🚀 服务器正在端口 ${PORT} 上运行`);
-  
-  try {
-    await database.connect();
-    console.log('✅ 数据库连接成功');
-    
-    // 初始化数据库集合
-    await database.initCollections();
-    console.log('✅ 数据库集合初始化完成');
-  } catch (error) {
-    console.error('❌ 数据库连接失败:', error.message);
-    console.log('⚠️ 服务器将在离线模式下运行');
-  }
-});
-
-
-
-
-
 // 基础中间件
 	app.use(
 	  helmet({
