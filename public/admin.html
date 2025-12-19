@@ -11,53 +11,147 @@
         .header { background: linear-gradient(90deg, #2c3e50, #4a6491); color: white; padding: 25px; text-align: center; }
         .header h1 { font-size: 32px; margin-bottom: 10px; }
         .content { padding: 30px; }
-        .controls { background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: 600; color: #333; }
-        input, select, button { padding: 10px; border: 2px solid #ddd; border-radius: 5px; font-size: 14px; }
+        
+        /* 合并的控制面板 */
+        .combined-controls {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            align-items: end;
+        }
+        
+        /* 紧凑的表单组 */
+        .form-group-compact {
+            margin-bottom: 0;
+        }
+        
+        .form-group-compact label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .form-group-compact input,
+        .form-group-compact select,
+        .form-group-compact button {
+            padding: 8px 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 13px;
+            width: 100%;
+        }
+        
+        /* 按钮组 */
+        .button-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        
+        .button-group button {
+            flex: 1;
+            padding: 8px 10px;
+            font-size: 13px;
+        }
+        
+        /* 快速日期按钮组 */
+        .quick-date-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+        
+        .quick-date-group button {
+            padding: 6px 10px;
+            font-size: 12px;
+            flex: 1;
+            min-width: 70px;
+        }
+        
+        /* 其他样式保持不变 */
         button { cursor: pointer; transition: all 0.3s; border: none; }
-        button:hover { opacity: 0.9; transform: translateY(-2px); }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn-primary { background: #3498db; color: white; }
         .btn-success { background: #2ecc71; color: white; }
         .btn-warning { background: #f39c12; color: white; }
         .btn-danger { background: #e74c3c; color: white; }
         .btn-info { background: #9b59b6; color: white; }
         .btn-secondary { background: #95a5a6; color: white; }
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px; }
-        .stat-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-left: 5px solid #3498db; }
-        .stat-card h3 { color: #2c3e50; margin-bottom: 10px; font-size: 16px; }
-        .stat-card .value { font-size: 28px; font-weight: bold; color: #3498db; }
-        .stat-card .label { font-size: 14px; color: #7f8c8d; }
-        .alert { padding: 15px; border-radius: 8px; margin: 15px 0; display: none; }
+        .btn-purple { background: #8e44ad; color: white; }
+        
+        .alert { padding: 12px; border-radius: 8px; margin: 10px 0; display: none; }
         .alert-success { background: #d4edda; color: #155724; }
         .alert-error { background: #f8d7da; color: #721c24; }
         .alert-info { background: #d1ecf1; color: #0c5460; }
-        .loading { display: none; text-align: center; padding: 20px; }
-        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 40px; height: 40px; animation: spin 2s linear infinite; margin: 0 auto 10px; }
+        
+        .loading { display: none; text-align: center; padding: 15px; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 2s linear infinite; margin: 0 auto 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
-        .data-table th, .data-table td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; }
+        .data-table th, .data-table td { border: 1px solid #ddd; padding: 6px; text-align: center; }
         .data-table th { background: #2c3e50; color: white; font-weight: 600; }
         .data-table tr:nth-child(even) { background: #f8f9fa; }
         .data-table tr:hover { background: #e3f2fd; }
-        .action-buttons button { margin: 2px; padding: 5px 10px; font-size: 12px; }
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-        .modal-content { background: white; margin: 5% auto; padding: 30px; border-radius: 10px; width: 80%; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .modal-header h2 { color: #2c3e50; }
-        .close { font-size: 28px; cursor: pointer; color: #aaa; }
-        .close:hover { color: #000; }
-        .pagination { display: flex; justify-content: center; margin-top: 20px; gap: 5px; }
-        .pagination button { padding: 8px 12px; }
+        
+        .action-buttons button { margin: 2px; padding: 4px 8px; font-size: 11px; }
+        
+        .pagination { display: flex; justify-content: center; margin-top: 15px; gap: 5px; }
+        .pagination button { padding: 6px 10px; font-size: 12px; }
         .active-page { background: #3498db; color: white; }
-        .view-mode { margin-bottom: 10px; }
-        .view-mode button { margin-right: 10px; }
-        .view-mode .active { background: #2c3e50; }
-        .export-options { margin-top: 20px; }
-        .export-options button { margin-right: 10px; }
+        
         .nav-links { text-align: center; margin: 20px 0; }
         .nav-links a { color: #4CAF50; text-decoration: none; font-weight: bold; padding: 10px 20px; border: 2px solid #4CAF50; border-radius: 5px; margin: 0 10px; }
         .nav-links a:hover { background: #4CAF50; color: white; }
+        
+        .export-options { margin-top: 15px; }
+        .export-options button { margin-right: 8px; padding: 8px 12px; font-size: 13px; }
+        
+        /* 模态框样式保持不变 */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
+        .modal-content { background: white; margin: 5% auto; padding: 25px; border-radius: 10px; width: 80%; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .modal-header h2 { color: #2c3e50; font-size: 20px; }
+        .close { font-size: 24px; cursor: pointer; color: #aaa; }
+        .close:hover { color: #000; }
+        
+        /* 视图模式按钮组 */
+        .view-mode {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .view-mode button {
+            padding: 8px 15px;
+            font-size: 13px;
+        }
+        
+        .view-mode .active {
+            background: #2c3e50;
+            color: white;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .combined-controls {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-date-group button {
+                min-width: 60px;
+                font-size: 11px;
+                padding: 5px 8px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -73,41 +167,30 @@
         </div>
         
         <div class="content">
-            <!-- 统计卡片 -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <h3>📈 总记录数</h3>
-                    <div class="value" id="totalRecords">0</div>
-                    <div class="label">条功课记录</div>
+            <!-- 合并的控制面板 -->
+            <div class="combined-controls">
+                <!-- 日期范围控制 -->
+                <div class="form-group-compact">
+                    <label>开始日期</label>
+                    <input type="date" id="startDate">
                 </div>
-                <div class="stat-card">
-                    <h3>📅 今日提交</h3>
-                    <div class="value" id="todayRecords">0</div>
-                    <div class="label">条记录</div>
+                
+                <div class="form-group-compact">
+                    <label>结束日期</label>
+                    <input type="date" id="endDate">
                 </div>
-                <div class="stat-card">
-                    <h3>👥 参与人数</h3>
-                    <div class="value" id="totalPeople">0</div>
-                    <div class="label">人</div>
+                
+                <!-- 按姓名筛选 -->
+                <div class="form-group-compact">
+                    <label>按姓名筛选</label>
+                    <select id="filterName">
+                        <option value="">全部人员</option>
+                        <!-- 姓名选项将通过JS动态添加 -->
+                    </select>
                 </div>
-                <div class="stat-card">
-                    <h3>📚 经典总数</h3>
-                    <div class="value" id="totalClassics">0</div>
-                    <div class="label">遍</div>
-                </div>
-            </div>
-            
-            <!-- 控制面板 -->
-            <div class="controls">
-                <div class="form-group">
-                    <label>搜索姓名</label>
-                    <input type="text" id="searchName" placeholder="输入姓名搜索...">
-                </div>
-                <div class="form-group">
-                    <label>搜索日期</label>
-                    <input type="date" id="searchDate">
-                </div>
-                <div class="form-group">
+                
+                <!-- 排序方式 -->
+                <div class="form-group-compact">
                     <label>排序方式</label>
                     <select id="sortBy">
                         <option value="createdAt_desc">最新提交</option>
@@ -116,7 +199,8 @@
                         <option value="totalClassics_desc">经典总数降序</option>
                     </select>
                 </div>
-                <div class="form-group">
+                
+                <div class="form-group-compact">
                     <label>每页显示</label>
                     <select id="pageSize">
                         <option value="10">10条</option>
@@ -125,9 +209,26 @@
                         <option value="100">100条</option>
                     </select>
                 </div>
-                <div class="form-group" style="display: flex; align-items: flex-end;">
-                    <button onclick="searchRecords()" class="btn-primary">🔍 搜索</button>
-                    <button onclick="resetSearch()" class="btn-secondary">🔄 重置</button>
+                
+                <div class="form-group-compact">
+                    <label>数据操作</label>
+                    <div class="button-group">
+                        <button onclick="loadData()" class="btn-success">🔍 加载数据</button>
+                        <button onclick="resetFilters()" class="btn-secondary">🔄 重置</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 快速日期按钮 -->
+            <div class="form-group-compact">
+                <label>快速日期选择</label>
+                <div class="quick-date-group">
+                    <button onclick="setDateRange('week')" class="btn-info active">本周</button>
+                    <button onclick="setDateRange('lastWeek')" class="btn-info">上周</button>
+                    <button onclick="setDateRange('month')" class="btn-info">本月</button>
+                    <button onclick="setDateRange('lastMonth')" class="btn-info">上月</button>
+                    <button onclick="setDateRange('year')" class="btn-info">今年</button>
+                    <button onclick="setDateRange('all')" class="btn-info">全部</button>
                 </div>
             </div>
             
@@ -135,7 +236,6 @@
             <div class="view-mode">
                 <button onclick="setViewMode('table')" class="btn-info active">📋 表格视图</button>
                 <button onclick="setViewMode('cards')" class="btn-info">🃏 卡片视图</button>
-                <button onclick="showStats()" class="btn-success">📊 详细统计</button>
                 <button onclick="exportData()" class="btn-warning">📤 导出数据</button>
             </div>
             
@@ -187,16 +287,16 @@
             </div>
             
             <!-- 批量操作 -->
-            <div class="controls" style="margin-top: 20px;">
+            <div class="view-mode" style="margin-top: 15px;">
                 <button onclick="selectAll()" class="btn-secondary">全选</button>
                 <button onclick="deselectAll()" class="btn-secondary">取消全选</button>
                 <button onclick="deleteSelected()" class="btn-danger">删除选中</button>
                 <button onclick="backupData()" class="btn-success">备份数据</button>
+                <button onclick="refreshAll()" class="btn-purple">🔄 刷新全部</button>
             </div>
             
             <!-- 导出选项 -->
             <div class="export-options">
-                <h3>导出数据</h3>
                 <button onclick="exportToCSV()" class="btn-primary">📄 导出为CSV</button>
                 <button onclick="exportToJSON()" class="btn-primary">📦 导出为JSON</button>
                 <button onclick="exportToExcel()" class="btn-primary">📊 导出为Excel</button>
@@ -217,25 +317,12 @@
             </div>
         </div>
     </div>
-    
-    <!-- 统计模态框 -->
-    <div id="statsModal" class="modal">
-        <div class="modal-content" style="max-width: 800px;">
-            <div class="modal-header">
-                <h2>📊 详细统计报告</h2>
-                <span class="close" onclick="closeStatsModal()">&times;</span>
-            </div>
-            <div id="statsContent">
-                <!-- 统计内容将通过JS动态生成 -->
-            </div>
-        </div>
-    </div>
 
     <script>
-        // API配置 - 修改这里
-        // 原代码：const API_BASE_URL = 'https://homework-api.nanmo009.workers.dev/api';
-        // 改为使用相对路径，因为管理页面和API在同一个域名下
-        const API_BASE_URL = '/api';
+        // API配置
+        const API_BASE_URL = window.location.origin.includes('localhost') 
+            ? 'http://localhost:3000/api' 
+            : window.location.origin + '/api';
         
         // 全局变量
         let allRecords = [];
@@ -245,60 +332,97 @@
         let pageSize = 20;
         let viewMode = 'table';
         let selectedRecords = new Set();
+        let nameList = [];
         
         // 页面加载
         document.addEventListener('DOMContentLoaded', function() {
-            loadStats();
-            loadRecords();
+            // 设置默认日期范围为本周
+            setDateRange('week');
             
-            // 设置默认日期为今天
-            document.getElementById('searchDate').value = new Date().toISOString().split('T')[0];
+            // 加载数据
+            loadData();
             
             // 监听页面大小变化
             document.getElementById('pageSize').addEventListener('change', function() {
                 pageSize = parseInt(this.value);
                 currentPage = 1;
-                loadRecords();
+                applyFilters();
             });
             
             // 监听排序变化
             document.getElementById('sortBy').addEventListener('change', function() {
-                loadRecords();
+                applyFilters();
+            });
+            
+            // 监听姓名筛选变化
+            document.getElementById('filterName').addEventListener('change', function() {
+                currentPage = 1;
+                applyFilters();
             });
         });
         
-        // 加载统计信息
-        async function loadStats() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/stats`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    const stats = data.stats;
-                    
-                    // 更新统计卡片
-                    document.getElementById('totalRecords').textContent = stats.totalRecords;
-                    document.getElementById('todayRecords').textContent = stats.todayRecords;
-                    document.getElementById('totalPeople').textContent = stats.nameStats.length;
-                    
-                    // 计算经典总数
-                    const classics = stats.classicsStats;
-                    const totalClassics = (classics.totalDiamond || 0) + 
-                                         (classics.totalAmitabha || 0) + 
-                                         (classics.totalGuanyin || 0) + 
-                                         (classics.totalPuxian || 0) + 
-                                         (classics.totalDizang || 0);
-                    
-                    document.getElementById('totalClassics').textContent = totalClassics;
-                }
-            } catch (error) {
-                console.error('加载统计失败:', error);
-                showMessage('连接服务器失败，请检查网络连接', 'error');
+        // 设置日期范围
+        function setDateRange(rangeType) {
+            const today = new Date();
+            const startDateInput = document.getElementById('startDate');
+            const endDateInput = document.getElementById('endDate');
+            
+            // 移除所有快速日期按钮的active类
+            document.querySelectorAll('.quick-date-group button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // 为当前选择的按钮添加active类
+            event.target.classList.add('active');
+            
+            let startDate, endDate;
+            
+            switch(rangeType) {
+                case 'week':
+                    const weekStart = new Date(today);
+                    weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // 周一
+                    startDate = weekStart.toISOString().split('T')[0];
+                    endDate = today.toISOString().split('T')[0];
+                    break;
+                case 'lastWeek':
+                    const lastWeekStart = new Date(today);
+                    lastWeekStart.setDate(lastWeekStart.getDate() - lastWeekStart.getDay() - 6);
+                    const lastWeekEnd = new Date(lastWeekStart);
+                    lastWeekEnd.setDate(lastWeekEnd.getDate() + 6);
+                    startDate = lastWeekStart.toISOString().split('T')[0];
+                    endDate = lastWeekEnd.toISOString().split('T')[0];
+                    break;
+                case 'month':
+                    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+                    startDate = monthStart.toISOString().split('T')[0];
+                    endDate = today.toISOString().split('T')[0];
+                    break;
+                case 'lastMonth':
+                    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+                    const lastMonthStart = new Date(lastMonth.getFullYear(), lastMonth.getMonth(), 1);
+                    const lastMonthEnd = new Date(lastMonth.getFullYear(), lastMonth.getMonth() + 1, 0);
+                    startDate = lastMonthStart.toISOString().split('T')[0];
+                    endDate = lastMonthEnd.toISOString().split('T')[0];
+                    break;
+                case 'year':
+                    const yearStart = new Date(today.getFullYear(), 0, 1);
+                    startDate = yearStart.toISOString().split('T')[0];
+                    endDate = today.toISOString().split('T')[0];
+                    break;
+                case 'all':
+                    startDate = null;
+                    endDate = null;
+                    break;
+                default:
+                    return;
             }
+            
+            if (startDate) startDateInput.value = startDate;
+            if (endDate) endDateInput.value = endDate;
         }
         
-        // 加载记录
-        async function loadRecords() {
+        // 加载数据
+        async function loadData() {
             showLoading(true);
             
             try {
@@ -307,7 +431,14 @@
                 
                 if (data.success) {
                     allRecords = data.data;
-                    applyFiltersAndPagination();
+                    
+                    // 更新姓名列表
+                    updateNameList();
+                    
+                    // 应用筛选
+                    applyFilters();
+                    
+                    showMessage('数据加载成功', 'success');
                 } else {
                     showMessage('加载数据失败: ' + (data.error || '未知错误'), 'error');
                 }
@@ -319,18 +450,52 @@
             }
         }
         
-        // 应用过滤和分页
-        function applyFiltersAndPagination() {
-            // 获取搜索条件
-            const searchName = document.getElementById('searchName').value.toLowerCase();
-            const searchDate = document.getElementById('searchDate').value;
+        // 更新姓名列表
+        function updateNameList() {
+            // 从所有记录中提取唯一的姓名
+            const names = [...new Set(allRecords.map(record => record.name))].sort();
+            nameList = names;
+            
+            const filterNameSelect = document.getElementById('filterName');
+            
+            // 保存当前选中的值
+            const currentValue = filterNameSelect.value;
+            
+            // 清空现有选项（保留第一个"全部人员"选项）
+            filterNameSelect.innerHTML = '<option value="">全部人员</option>';
+            
+            // 添加姓名选项
+            names.forEach(name => {
+                const option = document.createElement('option');
+                option.value = name;
+                option.textContent = name;
+                filterNameSelect.appendChild(option);
+            });
+            
+            // 恢复之前选中的值（如果存在）
+            if (nameList.includes(currentValue)) {
+                filterNameSelect.value = currentValue;
+            }
+        }
+        
+        // 应用筛选
+        function applyFilters() {
+            // 获取筛选条件
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const filterName = document.getElementById('filterName').value;
             const sortBy = document.getElementById('sortBy').value;
             
-            // 过滤记录
+            // 筛选记录
             currentRecords = allRecords.filter(record => {
-                const nameMatch = !searchName || record.name.toLowerCase().includes(searchName);
-                const dateMatch = !searchDate || record.date === searchDate;
-                return nameMatch && dateMatch;
+                // 日期筛选
+                const dateMatch = (!startDate || record.date >= startDate) && 
+                                 (!endDate || record.date <= endDate);
+                
+                // 姓名筛选
+                const nameMatch = !filterName || record.name === filterName;
+                
+                return dateMatch && nameMatch;
             });
             
             // 排序
@@ -364,8 +529,8 @@
                     break;
                 case 'totalClassics_desc':
                     currentRecords.sort((a, b) => {
-                        const totalA = a.diamond + a.amitabha + a.guanyin + a.puxian + a.dizang;
-                        const totalB = b.diamond + b.amitabha + b.guanyin + b.puxian + b.dizang;
+                        const totalA = (a.diamond || 0) + (a.amitabha || 0) + (a.guanyin || 0) + (a.puxian || 0) + (a.dizang || 0);
+                        const totalB = (b.diamond || 0) + (b.amitabha || 0) + (b.guanyin || 0) + (b.puxian || 0) + (b.dizang || 0);
                         return totalB - totalA;
                     });
                     break;
@@ -392,7 +557,7 @@
             if (records.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="15" style="text-align: center; padding: 50px;">
+                        <td colspan="15" style="text-align: center; padding: 30px;">
                             📭 暂无数据
                         </td>
                     </tr>
@@ -403,8 +568,8 @@
             let html = '';
             
             records.forEach(record => {
-                const totalClassics = record.diamond + record.amitabha + record.guanyin + 
-                                     record.puxian + record.dizang;
+                const totalClassics = (record.diamond || 0) + (record.amitabha || 0) + (record.guanyin || 0) + 
+                                     (record.puxian || 0) + (record.dizang || 0);
                 
                 const isSelected = selectedRecords.has(record._id);
                 
@@ -415,22 +580,22 @@
                                    data-id="${record._id}" 
                                    ${isSelected ? 'checked' : ''}
                                    onchange="toggleSelection('${record._id}')">
-                            <button onclick="editRecord('${record._id}')" class="btn-warning" style="padding: 5px;">✏️</button>
-                            <button onclick="deleteRecord('${record._id}')" class="btn-danger" style="padding: 5px;">🗑️</button>
+                            <button onclick="editRecord('${record._id}')" class="btn-warning" style="padding: 4px 6px; font-size: 11px;">✏️</button>
+                            <button onclick="deleteRecord('${record._id}')" class="btn-danger" style="padding: 4px 6px; font-size: 11px;">🗑️</button>
                         </td>
                         <td>${record.date}</td>
                         <td>${record.name}</td>
-                        <td>${record.nineWord}</td>
-                        <td>${record.buddhaWorship}</td>
-                        <td>${record.quietZen}</td>
-                        <td>${record.activeZen}</td>
-                        <td>${record.diamond}</td>
-                        <td>${record.amitabha}</td>
-                        <td>${record.guanyin}</td>
-                        <td>${record.puxian}</td>
-                        <td>${record.dizang}</td>
+                        <td>${record.nineWord || 0}</td>
+                        <td>${record.buddhaWorship || 0}</td>
+                        <td>${record.quietZen || 0}</td>
+                        <td>${record.activeZen || 0}</td>
+                        <td>${record.diamond || 0}</td>
+                        <td>${record.amitabha || 0}</td>
+                        <td>${record.guanyin || 0}</td>
+                        <td>${record.puxian || 0}</td>
+                        <td>${record.dizang || 0}</td>
                         <td><strong>${totalClassics}</strong></td>
-                        <td>${record.remark || ''}</td>
+                        <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">${record.remark || ''}</td>
                         <td>${formatDateTime(record.submitTime)}</td>
                     </tr>
                 `;
@@ -445,55 +610,55 @@
             
             if (records.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 50px; color: #7f8c8d;">
+                    <div style="text-align: center; padding: 30px; color: #7f8c8d;">
                         📭 暂无数据
                     </div>
                 `;
                 return;
             }
             
-            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">';
+            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">';
             
             records.forEach(record => {
-                const totalClassics = record.diamond + record.amitabha + record.guanyin + 
-                                     record.puxian + record.dizang;
+                const totalClassics = (record.diamond || 0) + (record.amitabha || 0) + (record.guanyin || 0) + 
+                                     (record.puxian || 0) + (record.dizang || 0);
                 
                 html += `
-                    <div class="stat-card" data-id="${record._id}">
+                    <div class="combined-controls" style="padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);" data-id="${record._id}">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <h3>${record.name}</h3>
+                            <h3 style="color: #2c3e50; font-size: 16px;">${record.name}</h3>
                             <input type="checkbox" class="record-checkbox" 
                                    data-id="${record._id}" 
                                    onchange="toggleSelection('${record._id}')">
                         </div>
-                        <div style="color: #7f8c8d; margin-bottom: 10px;">${record.date}</div>
+                        <div style="color: #7f8c8d; margin-bottom: 8px; font-size: 12px;">${record.date}</div>
                         
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px;">
-                            <div>九字禅: <strong>${record.nineWord}</strong></div>
-                            <div>拜忏文: <strong>${record.buddhaWorship}</strong></div>
-                            <div>静禅: <strong>${record.quietZen}分</strong></div>
-                            <div>动禅: <strong>${record.activeZen}分</strong></div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px; font-size: 12px;">
+                            <div>九字禅: <strong>${record.nineWord || 0}</strong></div>
+                            <div>拜忏文: <strong>${record.buddhaWorship || 0}</strong></div>
+                            <div>静禅: <strong>${record.quietZen || 0}分</strong></div>
+                            <div>动禅: <strong>${record.activeZen || 0}分</strong></div>
                         </div>
                         
-                        <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 15px;">
+                        <div style="background: #f8f9fa; padding: 8px; border-radius: 5px; margin-bottom: 12px; font-size: 12px;">
                             <div style="font-weight: bold; margin-bottom: 5px;">经典诵读:</div>
-                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; font-size: 12px;">
-                                <div>金刚经: ${record.diamond}</div>
-                                <div>阿弥陀经: ${record.amitabha}</div>
-                                <div>普门品: ${record.guanyin}</div>
-                                <div>普贤品: ${record.puxian}</div>
-                                <div>地藏经: ${record.dizang}</div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;">
+                                <div>金刚经: ${record.diamond || 0}</div>
+                                <div>阿弥陀经: ${record.amitabha || 0}</div>
+                                <div>普门品: ${record.guanyin || 0}</div>
+                                <div>普贤品: ${record.puxian || 0}</div>
+                                <div>地藏经: ${record.dizang || 0}</div>
                                 <div><strong>总计: ${totalClassics}</strong></div>
                             </div>
                         </div>
                         
-                        ${record.remark ? `<div style="font-style: italic; color: #666;">${record.remark}</div>` : ''}
+                        ${record.remark ? `<div style="font-style: italic; color: #666; font-size: 12px; margin-bottom: 8px;">${record.remark}</div>` : ''}
                         
-                        <div style="display: flex; justify-content: space-between; margin-top: 15px; font-size: 12px; color: #95a5a6;">
+                        <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 11px; color: #95a5a6;">
                             <div>${formatDateTime(record.submitTime)}</div>
                             <div>
-                                <button onclick="editRecord('${record._id}')" class="btn-warning" style="padding: 3px 8px; font-size: 11px;">编辑</button>
-                                <button onclick="deleteRecord('${record._id}')" class="btn-danger" style="padding: 3px 8px; font-size: 11px;">删除</button>
+                                <button onclick="editRecord('${record._id}')" class="btn-warning" style="padding: 3px 6px; font-size: 10px;">编辑</button>
+                                <button onclick="deleteRecord('${record._id}')" class="btn-danger" style="padding: 3px 6px; font-size: 10px;">删除</button>
                             </div>
                         </div>
                     </div>
@@ -541,19 +706,30 @@
             pagination.innerHTML = html;
         }
         
-        // 搜索记录
-        function searchRecords() {
-            currentPage = 1;
-            applyFiltersAndPagination();
-        }
-        
-        // 重置搜索
-        function resetSearch() {
-            document.getElementById('searchName').value = '';
-            document.getElementById('searchDate').value = '';
+        // 重置筛选
+        function resetFilters() {
+            // 重置日期范围
+            const today = new Date();
+            const weekStart = new Date(today);
+            weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
+            
+            document.getElementById('startDate').value = weekStart.toISOString().split('T')[0];
+            document.getElementById('endDate').value = today.toISOString().split('T')[0];
+            
+            // 重置姓名筛选
+            document.getElementById('filterName').value = '';
+            
+            // 重置排序
             document.getElementById('sortBy').value = 'createdAt_desc';
+            
+            // 重置快速日期按钮状态
+            document.querySelectorAll('.quick-date-group button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector('.quick-date-group button:nth-child(1)').classList.add('active');
+            
             currentPage = 1;
-            applyFiltersAndPagination();
+            applyFilters();
         }
         
         // 切换视图模式
@@ -578,7 +754,13 @@
             displayRecords();
         }
         
-        // 切换选择
+        // 刷新全部
+        function refreshAll() {
+            loadData();
+            showMessage('数据已刷新', 'success');
+        }
+        
+        // 其他辅助函数保持不变...
         function toggleSelection(recordId) {
             if (selectedRecords.has(recordId)) {
                 selectedRecords.delete(recordId);
@@ -586,14 +768,12 @@
                 selectedRecords.add(recordId);
             }
             
-            // 更新显示
             const row = document.querySelector(`[data-id="${recordId}"]`);
             if (row) {
                 row.classList.toggle('selected');
             }
         }
         
-        // 全选
         function selectAll() {
             const startIndex = (currentPage - 1) * pageSize;
             const endIndex = startIndex + pageSize;
@@ -603,29 +783,23 @@
                 selectedRecords.add(record._id);
             });
             
-            // 更新复选框
             document.querySelectorAll('.record-checkbox').forEach(checkbox => {
                 checkbox.checked = true;
             });
             
-            // 更新显示
             displayRecords();
         }
         
-        // 取消全选
         function deselectAll() {
             selectedRecords.clear();
             
-            // 更新复选框
             document.querySelectorAll('.record-checkbox').forEach(checkbox => {
                 checkbox.checked = false;
             });
             
-            // 更新显示
             displayRecords();
         }
         
-        // 删除选中记录
         async function deleteSelected() {
             if (selectedRecords.size === 0) {
                 showMessage('请先选择要删除的记录', 'info');
@@ -647,8 +821,7 @@
                 
                 selectedRecords.clear();
                 showMessage(`成功删除 ${deletedCount} 条记录`, 'success');
-                loadRecords();
-                loadStats();
+                refreshAll();
                 
             } catch (error) {
                 console.error('删除失败:', error);
@@ -658,20 +831,16 @@
             }
         }
         
-        // 从服务器删除记录
         async function deleteRecordFromServer(id) {
             const response = await fetch(`${API_BASE_URL}/delete`, {
                 method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id }),
             });
             
             return await response.json();
         }
         
-        // 删除单条记录
         async function deleteRecord(id) {
             if (!confirm('确定要删除这条记录吗？')) {
                 return;
@@ -682,8 +851,7 @@
                 
                 if (data.success) {
                     showMessage('记录已删除', 'success');
-                    loadRecords();
-                    loadStats();
+                    refreshAll();
                 } else {
                     showMessage(data.error || '删除失败', 'error');
                 }
@@ -693,60 +861,59 @@
             }
         }
         
-        // 编辑记录
+        // 编辑记录和提交编辑函数保持不变...
         async function editRecord(id) {
             const record = allRecords.find(r => r._id === id);
             if (!record) return;
             
-            // 生成编辑表单
             const formHtml = `
                 <form id="editRecordForm">
                     <input type="hidden" id="editId" value="${record._id}">
                     
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;">
-                        <div class="form-group">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                        <div class="form-group-compact">
                             <label>日期 *</label>
                             <input type="date" id="editDate" value="${record.date}" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group-compact">
                             <label>姓名 *</label>
                             <input type="text" id="editName" value="${record.name}" required>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group-compact">
                             <label>九字禅（声）</label>
-                            <input type="number" id="editNineWord" value="${record.nineWord}" min="0">
+                            <input type="number" id="editNineWord" value="${record.nineWord || 0}" min="0">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group-compact">
                             <label>礼佛拜忏文（遍）</label>
-                            <input type="number" id="editBuddhaWorship" value="${record.buddhaWorship}" min="0">
+                            <input type="number" id="editBuddhaWorship" value="${record.buddhaWorship || 0}" min="0">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group-compact">
                             <label>静禅（分钟）</label>
-                            <input type="number" id="editQuietZen" value="${record.quietZen}" min="0">
+                            <input type="number" id="editQuietZen" value="${record.quietZen || 0}" min="0">
                         </div>
-                        <div class="form-group">
+                        <div class="form-group-compact">
                             <label>动禅（分钟）</label>
-                            <input type="number" id="editActiveZen" value="${record.activeZen}" min="0">
+                            <input type="number" id="editActiveZen" value="${record.activeZen || 0}" min="0">
                         </div>
                     </div>
                     
-                    <div style="margin: 15px 0;">
-                        <h4>经典诵读（遍）</h4>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                            <div>金刚经: <input type="number" id="editDiamond" value="${record.diamond}" min="0" max="10" style="width: 60px;"></div>
-                            <div>阿弥陀经: <input type="number" id="editAmitabha" value="${record.amitabha}" min="0" max="10" style="width: 60px;"></div>
-                            <div>普门品: <input type="number" id="editGuanyin" value="${record.guanyin}" min="0" max="10" style="width: 60px;"></div>
-                            <div>普贤品: <input type="number" id="editPuxian" value="${record.puxian}" min="0" max="10" style="width: 60px;"></div>
-                            <div>地藏经: <input type="number" id="editDizang" value="${record.dizang}" min="0" max="10" style="width: 60px;"></div>
+                    <div style="margin: 12px 0;">
+                        <h4 style="font-size: 14px; margin-bottom: 8px;">经典诵读（遍）</h4>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 13px;">
+                            <div>金刚经: <input type="number" id="editDiamond" value="${record.diamond || 0}" min="0" max="10" style="width: 50px;"></div>
+                            <div>阿弥陀经: <input type="number" id="editAmitabha" value="${record.amitabha || 0}" min="0" max="10" style="width: 50px;"></div>
+                            <div>普门品: <input type="number" id="editGuanyin" value="${record.guanyin || 0}" min="0" max="10" style="width: 50px;"></div>
+                            <div>普贤品: <input type="number" id="editPuxian" value="${record.puxian || 0}" min="0" max="10" style="width: 50px;"></div>
+                            <div>地藏经: <input type="number" id="editDizang" value="${record.dizang || 0}" min="0" max="10" style="width: 50px;"></div>
                         </div>
                     </div>
                     
-                    <div class="form-group">
+                    <div class="form-group-compact">
                         <label>备注</label>
-                        <textarea id="editRemark" rows="3" style="width: 100%;">${record.remark || ''}</textarea>
+                        <textarea id="editRemark" rows="2" style="width: 100%; font-size: 13px;">${record.remark || ''}</textarea>
                     </div>
                     
-                    <div style="display: flex; gap: 10px; margin-top: 20px;">
+                    <div style="display: flex; gap: 8px; margin-top: 15px;">
                         <button type="button" onclick="submitEdit()" class="btn-success">保存修改</button>
                         <button type="button" onclick="closeModal()" class="btn-secondary">取消</button>
                     </div>
@@ -757,7 +924,6 @@
             document.getElementById('editModal').style.display = 'block';
         }
         
-        // 提交编辑
         async function submitEdit() {
             const id = document.getElementById('editId').value;
             const updateData = {
@@ -783,9 +949,7 @@
             try {
                 const response = await fetch(`${API_BASE_URL}/update`, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id, ...updateData }),
                 });
                 
@@ -794,8 +958,7 @@
                 if (data.success) {
                     showMessage('记录更新成功', 'success');
                     closeModal();
-                    loadRecords();
-                    loadStats();
+                    refreshAll();
                 } else {
                     showMessage(data.error || '更新失败', 'error');
                 }
@@ -805,78 +968,12 @@
             }
         }
         
-        // 显示详细统计
-        async function showStats() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/stats`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    const stats = data.stats;
-                    let html = `
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 20px;">
-                            <div class="stat-card">
-                                <h3>📈 总体统计</h3>
-                                <p>总记录数: <strong>${stats.totalRecords}</strong></p>
-                                <p>今日提交: <strong>${stats.todayRecords}</strong></p>
-                                <p>参与人数: <strong>${stats.nameStats.length}</strong></p>
-                            </div>
-                            <div class="stat-card">
-                                <h3>📚 经典统计</h3>
-                                <p>金刚经: <strong>${stats.classicsStats.totalDiamond || 0} 遍</strong></p>
-                                <p>阿弥陀经: <strong>${stats.classicsStats.totalAmitabha || 0} 遍</strong></p>
-                                <p>普门品: <strong>${stats.classicsStats.totalGuanyin || 0} 遍</strong></p>
-                                <p>普贤品: <strong>${stats.classicsStats.totalPuxian || 0} 遍</strong></p>
-                                <p>地藏经: <strong>${stats.classicsStats.totalDizang || 0} 遍</strong></p>
-                            </div>
-                        </div>
-                        
-                        <h3>👥 个人统计排名</h3>
-                        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-                            <thead>
-                                <tr>
-                                    <th style="border: 1px solid #ddd; padding: 8px;">排名</th>
-                                    <th style="border: 1px solid #ddd; padding: 8px;">姓名</th>
-                                    <th style="border: 1px solid #ddd; padding: 8px;">提交次数</th>
-                                    <th style="border: 1px solid #ddd; padding: 8px;">最后提交</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                    `;
-                    
-                    stats.nameStats.forEach((person, index) => {
-                        html += `
-                            <tr>
-                                <td style="border: 1px solid #ddd; padding: 8px;">${index + 1}</td>
-                                <td style="border: 1px solid #ddd; padding: 8px;">${person._id}</td>
-                                <td style="border: 1px solid #ddd; padding: 8px;">${person.count} 次</td>
-                                <td style="border: 1px solid #ddd; padding: 8px;">${formatDateTime(person.lastSubmit)}</td>
-                            </tr>
-                        `;
-                    });
-                    
-                    html += `
-                            </tbody>
-                        </table>
-                    `;
-                    
-                    document.getElementById('statsContent').innerHTML = html;
-                    document.getElementById('statsModal').style.display = 'block';
-                }
-            } catch (error) {
-                console.error('加载统计失败:', error);
-                showMessage('加载统计失败: ' + error.message, 'error');
-            }
-        }
-        
         // 导出数据
         function exportData() {
-            // 显示导出选项
             const exportDiv = document.querySelector('.export-options');
             exportDiv.style.display = exportDiv.style.display === 'none' ? 'block' : 'none';
         }
         
-        // 导出为CSV
         function exportToCSV() {
             if (allRecords.length === 0) {
                 showMessage('没有数据可导出', 'info');
@@ -886,15 +983,14 @@
             let csv = '日期,姓名,九字禅(声),拜忏文(遍),静禅(分钟),动禅(分钟),金刚经,阿弥陀经,普门品,普贤品,地藏经,经典总数,备注,提交时间\n';
             
             allRecords.forEach(record => {
-                const total = record.diamond + record.amitabha + record.guanyin + 
-                             record.puxian + record.dizang;
-                csv += `${record.date},${record.name},${record.nineWord},${record.buddhaWorship},${record.quietZen},${record.activeZen},${record.diamond},${record.amitabha},${record.guanyin},${record.puxian},${record.dizang},${total},"${record.remark || ''}",${record.submitTime}\n`;
+                const total = (record.diamond || 0) + (record.amitabha || 0) + (record.guanyin || 0) + 
+                             (record.puxian || 0) + (record.dizang || 0);
+                csv += `${record.date},${record.name},${record.nineWord || 0},${record.buddhaWorship || 0},${record.quietZen || 0},${record.activeZen || 0},${record.diamond || 0},${record.amitabha || 0},${record.guanyin || 0},${record.puxian || 0},${record.dizang || 0},${total},"${record.remark || ''}",${record.submitTime}\n`;
             });
             
             downloadFile(csv, '功课记录.csv', 'text/csv');
         }
         
-        // 导出为JSON
         function exportToJSON() {
             if (allRecords.length === 0) {
                 showMessage('没有数据可导出', 'info');
@@ -905,23 +1001,19 @@
             downloadFile(json, '功课记录.json', 'application/json');
         }
         
-        // 导出为Excel（简化为CSV）
         function exportToExcel() {
             exportToCSV();
         }
         
-        // 打印数据
         function printData() {
             window.print();
         }
         
-        // 备份数据
         function backupData() {
             exportToJSON();
             showMessage('数据备份已开始下载', 'success');
         }
         
-        // 下载文件
         function downloadFile(content, fileName, contentType) {
             const blob = new Blob(['\uFEFF' + content], { type: contentType });
             const url = window.URL.createObjectURL(blob);
@@ -932,7 +1024,6 @@
             window.URL.revokeObjectURL(url);
         }
         
-        // 辅助函数
         function formatDateTime(dateTime) {
             if (!dateTime) return '';
             const date = new Date(dateTime);
@@ -941,7 +1032,7 @@
         
         function changePage(page) {
             currentPage = page;
-            applyFiltersAndPagination();
+            applyFilters();
         }
         
         function showLoading(show) {
@@ -961,10 +1052,6 @@
         
         function closeModal() {
             document.getElementById('editModal').style.display = 'none';
-        }
-        
-        function closeStatsModal() {
-            document.getElementById('statsModal').style.display = 'none';
         }
     </script>
 </body>
