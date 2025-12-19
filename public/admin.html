@@ -60,7 +60,19 @@
             font-size: 13px;
         }
         
-        /* 快速日期按钮组 */
+        /* 快速日期选择和操作按钮行 */
+        .action-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .quick-date-container {
+            flex: 1;
+        }
+        
         .quick-date-group {
             display: flex;
             gap: 8px;
@@ -69,10 +81,28 @@
         }
         
         .quick-date-group button {
-            padding: 6px 10px;
-            font-size: 12px;
+            padding: 8px 12px;
+            font-size: 13px;
             flex: 1;
-            min-width: 70px;
+            min-width: 30px;
+        }
+        
+        .data-action-container {
+            display: flex;
+            flex-direction: column;
+            min-width: 420px;
+        }
+        
+        .data-action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .data-action-buttons button {
+            flex: 1;
+            padding: 10px 15px;
+            font-size: 14px;
         }
         
         /* 其他样式保持不变 */
@@ -146,10 +176,25 @@
                 grid-template-columns: 1fr;
             }
             
+            .action-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .data-action-container {
+                min-width: auto;
+                width: 100%;
+            }
+            
             .quick-date-group button {
-                min-width: 60px;
-                font-size: 11px;
-                padding: 5px 8px;
+                min-width: 70px;
+                font-size: 12px;
+                padding: 6px 8px;
+            }
+            
+            .data-action-buttons button {
+                padding: 8px 12px;
+                font-size: 13px;
             }
         }
     </style>
@@ -209,26 +254,32 @@
                         <option value="100">100条</option>
                     </select>
                 </div>
-                
-                <div class="form-group-compact">
-                    <label>数据操作</label>
-                    <div class="button-group">
-                        <button onclick="loadData()" class="btn-success">🔍 加载数据</button>
-                        <button onclick="resetFilters()" class="btn-secondary">🔄 重置</button>
-                    </div>
-                </div>
             </div>
             
-            <!-- 快速日期按钮 -->
-            <div class="form-group-compact">
-                <label>快速日期选择</label>
-                <div class="quick-date-group">
-                    <button onclick="setDateRange('week')" class="btn-info active">本周</button>
-                    <button onclick="setDateRange('lastWeek')" class="btn-info">上周</button>
-                    <button onclick="setDateRange('month')" class="btn-info">本月</button>
-                    <button onclick="setDateRange('lastMonth')" class="btn-info">上月</button>
-                    <button onclick="setDateRange('year')" class="btn-info">今年</button>
-                    <button onclick="setDateRange('all')" class="btn-info">全部</button>
+            <!-- 快速日期选择和操作按钮行 -->
+            <div class="action-row">
+                <div class="quick-date-container">
+                    <div class="form-group-compact">
+                        <label>快速日期选择</label>
+                        <div class="quick-date-group">
+                            <button onclick="setDateRange('week')" class="btn-info active">本周</button>
+                            <button onclick="setDateRange('lastWeek')" class="btn-info">上周</button>
+                            <button onclick="setDateRange('month')" class="btn-info">本月</button>
+                            <button onclick="setDateRange('lastMonth')" class="btn-info">上月</button>
+                            <button onclick="setDateRange('year')" class="btn-info">今年</button>
+                            <button onclick="setDateRange('all')" class="btn-info">全部</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="data-action-container">
+                    <div class="form-group-compact">
+                        <label>数据操作</label>
+                        <div class="data-action-buttons">
+                            <button onclick="loadData()" class="btn-success">🔍 加载数据</button>
+                            <button onclick="resetFilters()" class="btn-secondary">🔄 重置</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             
