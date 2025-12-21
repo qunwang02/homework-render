@@ -117,6 +117,7 @@ router.post('/submit', ensureDatabase, async (req, res) => {
       guanyin: parseInt(record.guanyin) || 0,
       puxian: parseInt(record.puxian) || 0,
       dizang: parseInt(record.dizang) || 0,
+      yaoshi: parseInt(record.yaoshi) || 0, // 添加药师经字段
       remark: record.remark || '',
       deviceId: record.deviceId || 'web',
       submitTime: now,
@@ -245,6 +246,7 @@ router.get('/records', ensureDatabase, async (req, res) => {
       guanyin: item.guanyin || 0,
       puxian: item.puxian || 0,
       dizang: item.dizang || 0,
+      yaoshi: item.yaoshi || 0, // 添加药师经字段
       remark: item.remark || '',
       submitTime: item.submittedAt || item.createdAt || new Date(),
       createdAt: item.createdAt || new Date(),
@@ -397,6 +399,7 @@ router.get('/stats', ensureDatabase, async (req, res) => {
           totalGuanyin: { $sum: '$guanyin' },
           totalPuxian: { $sum: '$puxian' },
           totalDizang: { $sum: '$dizang' }
+          totalYaoshi: { $sum: '$yaoshi' } // 添加药师经统计
         }}
       ]).toArray()
     ]);
@@ -413,14 +416,16 @@ router.get('/stats', ensureDatabase, async (req, res) => {
       totalAmitabha: 0,
       totalGuanyin: 0,
       totalPuxian: 0,
-      totalDizang: 0
+      totalDizang: 0,
+      totalYaoshi: 0
     };
     
     const totalClassics = classicsTotal.totalDiamond + 
                          classicsTotal.totalAmitabha + 
                          classicsTotal.totalGuanyin + 
                          classicsTotal.totalPuxian + 
-                         classicsTotal.totalDizang;
+                         classicsTotal.totalDizan +
+                          classicsTotal.totalYaoshi; // 添加药师经
     
     const stats = {
       totalRecords: totalCount,
@@ -477,6 +482,7 @@ router.get('/export/csv', ensureDatabase, async (req, res) => {
       '普门品(遍)',
       '普贤品(遍)',
       '地藏经(遍)',
+      '药师经(遍)', // 添加药师经
       '经典总数',
       '备注',
       '提交时间',
@@ -492,6 +498,7 @@ router.get('/export/csv', ensureDatabase, async (req, res) => {
                            (item.guanyin || 0) + 
                            (item.puxian || 0) + 
                            (item.dizang || 0);
+                           (item.yaoshi || 0); // 添加药师经
       
       const row = [
         `"${item.date || ''}"`,
@@ -505,6 +512,7 @@ router.get('/export/csv', ensureDatabase, async (req, res) => {
         item.guanyin || 0,
         item.puxian || 0,
         item.dizang || 0,
+        item.yaoshi || 0, // 添加药师经
         totalClassics,
         `"${item.remark || ''}"`,
         item.submittedAt ? new Date(item.submittedAt).toISOString() : '',
