@@ -5,12 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>功课数据管理系统</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background: linear-gradient(135deg, #1a2980, #26d0ce); min-height: 100vh; padding: 20px; }
-        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden; }
-        .header { background: linear-gradient(90deg, #2c3e50, #4a6491); color: white; padding: 25px; text-align: center; }
-        .header h1 { font-size: 32px; margin-bottom: 10px; }
-        .content { padding: 30px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif; }
+        body { 
+            background: linear-gradient(135deg, #1a2980, #26d0ce); 
+            min-height: 100vh; 
+            padding: 20px;
+        }
+        
+        .container { 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 15px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); 
+            overflow: hidden;
+        }
+        
+        .header { 
+            background: linear-gradient(90deg, #2c3e50, #4a6491); 
+            color: white; 
+            padding: 25px; 
+            text-align: center;
+        }
+        
+        .header h1 { 
+            font-size: 32px; 
+            margin-bottom: 10px; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .content { 
+            padding: 30px; 
+        }
+        
+        /* 导航链接 */
+        .nav-links { 
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .nav-links a { 
+            color: white; 
+            text-decoration: none; 
+            font-weight: 600; 
+            padding: 10px 25px; 
+            border-radius: 8px; 
+            background: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .nav-links a:hover { 
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
         
         /* 合并的控制面板 */
         .combined-controls {
@@ -22,9 +76,9 @@
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 15px;
             align-items: end;
+            border: 1px solid #e9ecef;
         }
         
-        /* 紧凑的表单组 */
         .form-group-compact {
             margin-bottom: 0;
         }
@@ -40,57 +94,85 @@
         .form-group-compact input,
         .form-group-compact select,
         .form-group-compact button {
-            padding: 8px 10px;
+            padding: 10px 12px;
             border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 13px;
+            border-radius: 6px;
+            font-size: 14px;
             width: 100%;
+            transition: border-color 0.3s;
         }
         
-        /* 按钮组 */
-        .button-group {
-            display: flex;
-            gap: 8px;
-            margin-top: 5px;
+        .form-group-compact input:focus,
+        .form-group-compact select:focus {
+            border-color: #3498db;
+            outline: none;
         }
         
-        .button-group button {
-            flex: 1;
-            padding: 8px 10px;
-            font-size: 13px;
+        /* 按钮样式 */
+        button { 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            border: none; 
+            border-radius: 6px;
+            font-weight: 600;
         }
         
-        /* 快速日期选择和操作按钮行 */
+        button:hover { 
+            opacity: 0.9; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-primary { background: #3498db; color: white; }
+        .btn-success { background: #2ecc71; color: white; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-info { 
+            background: #3498db; 
+            color: white;
+            border: 1px solid #2980b9;
+        }
+        
+        .btn-info.active {
+            background: #2c3e50;
+            transform: scale(0.98);
+        }
+        
+        .btn-secondary { background: #95a5a6; color: white; }
+        .btn-purple { background: #8e44ad; color: white; }
+        
+        /* 操作按钮行 */
         .action-row {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            gap: 10px;
+            gap: 15px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         
         .quick-date-container {
             flex: 1;
+            min-width: 300px;
         }
         
         .quick-date-group {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
             gap: 8px;
-            flex-wrap: wrap;
             margin-top: 5px;
         }
         
         .quick-date-group button {
-            padding: 8px 12px;
+            padding: 10px 8px;
             font-size: 13px;
-            flex: 1;
-            min-width: 30px;
+            white-space: nowrap;
         }
         
         .data-action-container {
             display: flex;
             flex-direction: column;
-            min-width: 420px;
+            min-width: 300px;
         }
         
         .data-action-buttons {
@@ -101,76 +183,243 @@
         
         .data-action-buttons button {
             flex: 1;
-            padding: 10px 15px;
+            padding: 12px 15px;
             font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
-        /* 其他样式保持不变 */
-        button { cursor: pointer; transition: all 0.3s; border: none; }
-        button:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-primary { background: #3498db; color: white; }
-        .btn-success { background: #2ecc71; color: white; }
-        .btn-warning { background: #f39c12; color: white; }
-        .btn-danger { background: #e74c3c; color: white; }
-        .btn-info { background: #9b59b6; color: white; }
-        .btn-secondary { background: #95a5a6; color: white; }
-        .btn-purple { background: #8e44ad; color: white; }
+        /* 消息提示 */
+        .alert { 
+            padding: 15px; 
+            border-radius: 8px; 
+            margin: 15px 0; 
+            display: none;
+            border-left: 4px solid transparent;
+        }
         
-        .alert { padding: 12px; border-radius: 8px; margin: 10px 0; display: none; }
-        .alert-success { background: #d4edda; color: #155724; }
-        .alert-error { background: #f8d7da; color: #721c24; }
-        .alert-info { background: #d1ecf1; color: #0c5460; }
+        .alert-success { 
+            background: #d4edda; 
+            color: #155724;
+            border-left-color: #28a745;
+        }
         
-        .loading { display: none; text-align: center; padding: 15px; }
-        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 2s linear infinite; margin: 0 auto 10px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .alert-error { 
+            background: #f8d7da; 
+            color: #721c24;
+            border-left-color: #dc3545;
+        }
         
-        .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 12px; }
-        .data-table th, .data-table td { border: 1px solid #ddd; padding: 6px; text-align: center; }
-        .data-table th { background: #2c3e50; color: white; font-weight: 600; }
+        .alert-info { 
+            background: #d1ecf1; 
+            color: #0c5460;
+            border-left-color: #17a2b8;
+        }
+        
+        /* 加载动画 */
+        .loading { 
+            display: none; 
+            text-align: center; 
+            padding: 30px; 
+        }
+        
+        .spinner { 
+            border: 4px solid #f3f3f3; 
+            border-top: 4px solid #3498db; 
+            border-radius: 50%; 
+            width: 40px; 
+            height: 40px; 
+            animation: spin 1s linear infinite; 
+            margin: 0 auto 15px; 
+        }
+        
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        
+        /* 数据表格 */
+        .data-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 15px; 
+            font-size: 13px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .data-table th, .data-table td { 
+            border: 1px solid #dee2e6; 
+            padding: 8px 10px; 
+            text-align: center; 
+        }
+        
+        .data-table th { 
+            background: linear-gradient(135deg, #2c3e50, #4a6491); 
+            color: white; 
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+        
         .data-table tr:nth-child(even) { background: #f8f9fa; }
         .data-table tr:hover { background: #e3f2fd; }
+        .data-table tr.selected { background: #fff3cd !important; }
         
-        .action-buttons button { margin: 2px; padding: 4px 8px; font-size: 11px; }
+        /* 分页 */
+        .pagination { 
+            display: flex; 
+            justify-content: center; 
+            margin-top: 20px; 
+            gap: 5px; 
+            flex-wrap: wrap;
+        }
         
-        .pagination { display: flex; justify-content: center; margin-top: 15px; gap: 5px; }
-        .pagination button { padding: 6px 10px; font-size: 12px; }
-        .active-page { background: #3498db; color: white; }
+        .pagination button { 
+            padding: 8px 12px; 
+            font-size: 13px; 
+            min-width: 40px;
+        }
         
-        .nav-links { text-align: center; margin: 20px 0; }
-        .nav-links a { color: #4CAF50; text-decoration: none; font-weight: bold; padding: 10px 20px; border: 2px solid #4CAF50; border-radius: 5px; margin: 0 10px; }
-        .nav-links a:hover { background: #4CAF50; color: white; }
+        .active-page { 
+            background: #3498db; 
+            color: white;
+            font-weight: bold;
+        }
         
-        .export-options { margin-top: 15px; }
-        .export-options button { margin-right: 8px; padding: 8px 12px; font-size: 13px; }
-        
-        /* 模态框样式保持不变 */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); }
-        .modal-content { background: white; margin: 5% auto; padding: 25px; border-radius: 10px; width: 80%; max-width: 600px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .modal-header h2 { color: #2c3e50; font-size: 20px; }
-        .close { font-size: 24px; cursor: pointer; color: #aaa; }
-        .close:hover { color: #000; }
-        
-        /* 视图模式按钮组 */
+        /* 视图模式 */
         .view-mode {
             margin-bottom: 15px;
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
         }
         
         .view-mode button {
-            padding: 8px 15px;
-            font-size: 13px;
+            padding: 10px 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .view-mode .active {
-            background: #2c3e50;
+        /* 模态框 */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; 
+            top: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.5); 
+            backdrop-filter: blur(3px);
+        }
+        
+        .modal-content { 
+            background: white; 
+            margin: 5% auto; 
+            padding: 25px; 
+            border-radius: 10px; 
+            width: 90%; 
+            max-width: 500px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h2 { 
+            color: #2c3e50; 
+            font-size: 22px; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .close { 
+            font-size: 28px; 
+            cursor: pointer; 
+            color: #aaa; 
+            transition: color 0.3s;
+        }
+        
+        .close:hover { 
+            color: #000; 
+        }
+        
+        /* 卡片视图 */
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        }
+        
+        /* 统计卡片 */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: bold;
         }
         
         /* 响应式调整 */
+        @media (max-width: 992px) {
+            .quick-date-group {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
         @media (max-width: 768px) {
             .combined-controls {
                 grid-template-columns: 1fr;
@@ -181,28 +430,60 @@
                 align-items: stretch;
             }
             
+            .quick-date-container,
             .data-action-container {
                 min-width: auto;
                 width: 100%;
             }
             
-            .quick-date-group button {
-                min-width: 70px;
+            .quick-date-group {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .data-table {
                 font-size: 12px;
+            }
+            
+            .data-table th, .data-table td {
                 padding: 6px 8px;
             }
             
-            .data-action-buttons button {
-                padding: 8px 12px;
-                font-size: 13px;
+            .modal-content {
+                width: 95%;
+                margin: 10% auto;
+                padding: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .nav-links a {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+                flex-direction: column;
+            }
+            
+            .view-mode {
+                flex-direction: column;
+            }
+            
+            .quick-date-group {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
     <div class="nav-links">
-        <a href="/">提交页面</a>
-        <a href="/manage">管理页面</a>
+        <a href="/">📝 提交页面</a>
+        <a href="/manage">📊 管理页面</a>
     </div>
     
     <div class="container">
@@ -212,31 +493,32 @@
         </div>
         
         <div class="content">
+            <!-- 统计卡片 -->
+            <div class="stats-container" id="statsContainer">
+                <!-- 统计信息将通过JS动态生成 -->
+            </div>
+            
             <!-- 合并的控制面板 -->
             <div class="combined-controls">
-                <!-- 日期范围控制 -->
                 <div class="form-group-compact">
-                    <label>开始日期</label>
+                    <label><i class="far fa-calendar-alt"></i> 开始日期</label>
                     <input type="date" id="startDate">
                 </div>
                 
                 <div class="form-group-compact">
-                    <label>结束日期</label>
+                    <label><i class="far fa-calendar-alt"></i> 结束日期</label>
                     <input type="date" id="endDate">
                 </div>
                 
-                <!-- 按姓名筛选 -->
                 <div class="form-group-compact">
-                    <label>按姓名筛选</label>
+                    <label><i class="far fa-user"></i> 按姓名筛选</label>
                     <select id="filterName">
                         <option value="">全部人员</option>
-                        <!-- 姓名选项将通过JS动态添加 -->
                     </select>
                 </div>
                 
-                <!-- 排序方式 -->
                 <div class="form-group-compact">
-                    <label>排序方式</label>
+                    <label><i class="fas fa-sort"></i> 排序方式</label>
                     <select id="sortBy">
                         <option value="createdAt_desc">最新提交</option>
                         <option value="date_desc">最新日期</option>
@@ -246,7 +528,7 @@
                 </div>
                 
                 <div class="form-group-compact">
-                    <label>每页显示</label>
+                    <label><i class="fas fa-list-ol"></i> 每页显示</label>
                     <select id="pageSize">
                         <option value="10">10条</option>
                         <option value="20" selected>20条</option>
@@ -260,24 +542,28 @@
             <div class="action-row">
                 <div class="quick-date-container">
                     <div class="form-group-compact">
-                        <label>快速日期选择</label>
+                        <label><i class="fas fa-bolt"></i> 快速日期选择</label>
                         <div class="quick-date-group">
-                            <button onclick="setDateRange('week')" class="btn-info active">本周</button>
-                            <button onclick="setDateRange('lastWeek')" class="btn-info">上周</button>
-                            <button onclick="setDateRange('month')" class="btn-info">本月</button>
-                            <button onclick="setDateRange('lastMonth')" class="btn-info">上月</button>
-                            <button onclick="setDateRange('year')" class="btn-info">今年</button>
-                            <button onclick="setDateRange('all')" class="btn-info">全部</button>
+                            <button onclick="setDateRange('week', this)" class="btn-info active">本周</button>
+                            <button onclick="setDateRange('lastWeek', this)" class="btn-info">上周</button>
+                            <button onclick="setDateRange('month', this)" class="btn-info">本月</button>
+                            <button onclick="setDateRange('lastMonth', this)" class="btn-info">上月</button>
+                            <button onclick="setDateRange('year', this)" class="btn-info">今年</button>
+                            <button onclick="setDateRange('all', this)" class="btn-info">全部</button>
                         </div>
                     </div>
                 </div>
                 
                 <div class="data-action-container">
                     <div class="form-group-compact">
-                        <label>数据操作</label>
+                        <label><i class="fas fa-cogs"></i> 数据操作</label>
                         <div class="data-action-buttons">
-                            <button onclick="loadData()" class="btn-success">🔍 加载数据</button>
-                            <button onclick="resetFilters()" class="btn-secondary">🔄 重置</button>
+                            <button onclick="loadData()" class="btn-success">
+                                <i class="fas fa-search"></i> 加载数据
+                            </button>
+                            <button onclick="resetFilters()" class="btn-secondary">
+                                <i class="fas fa-redo"></i> 重置
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -285,9 +571,31 @@
             
             <!-- 视图模式 -->
             <div class="view-mode">
-                <button onclick="setViewMode('table')" class="btn-info active">📋 表格视图</button>
-                <button onclick="setViewMode('cards')" class="btn-info">🃏 卡片视图</button>
-                <button onclick="exportData()" class="btn-warning">📤 导出数据</button>
+                <button onclick="setViewMode('table')" class="btn-info active">
+                    <i class="fas fa-table"></i> 表格视图
+                </button>
+                <button onclick="setViewMode('cards')" class="btn-info">
+                    <i class="fas fa-th-large"></i> 卡片视图
+                </button>
+                <button onclick="showExportOptions()" class="btn-warning">
+                    <i class="fas fa-download"></i> 导出数据
+                </button>
+            </div>
+            
+            <!-- 导出选项 -->
+            <div id="exportOptions" class="export-options" style="display: none; margin-bottom: 20px;">
+                <button onclick="exportToCSV()" class="btn-primary">
+                    <i class="fas fa-file-csv"></i> 导出为CSV
+                </button>
+                <button onclick="exportToJSON()" class="btn-primary">
+                    <i class="fas fa-file-code"></i> 导出为JSON
+                </button>
+                <button onclick="exportToExcel()" class="btn-primary">
+                    <i class="fas fa-file-excel"></i> 导出为Excel
+                </button>
+                <button onclick="printData()" class="btn-secondary">
+                    <i class="fas fa-print"></i> 打印数据
+                </button>
             </div>
             
             <!-- 加载动画 -->
@@ -317,42 +625,40 @@
                                 <th>普门品</th>
                                 <th>普贤品</th>
                                 <th>地藏经</th>
-								<th>药师经</th> <!-- 新增列 -->								
                                 <th>经典总数</th>
                                 <th>备注</th>
                                 <th>提交时间</th>
                             </tr>
                         </thead>
                         <tbody id="dataTableBody">
-                            <!-- 数据将通过JS填充 -->
                         </tbody>
                     </table>
                 </div>
                 <div id="cardsView" style="display: none;">
-                    <!-- 卡片视图将通过JS填充 -->
                 </div>
             </div>
             
             <!-- 分页 -->
             <div class="pagination" id="pagination">
-                <!-- 分页按钮将通过JS生成 -->
             </div>
             
             <!-- 批量操作 -->
             <div class="view-mode" style="margin-top: 15px;">
-                <button onclick="selectAll()" class="btn-secondary">全选</button>
-                <button onclick="deselectAll()" class="btn-secondary">取消全选</button>
-                <button onclick="deleteSelected()" class="btn-danger">删除选中</button>
-                <button onclick="backupData()" class="btn-success">备份数据</button>
-                <button onclick="refreshAll()" class="btn-purple">🔄 刷新全部</button>
-            </div>
-            
-            <!-- 导出选项 -->
-            <div class="export-options">
-                <button onclick="exportToCSV()" class="btn-primary">📄 导出为CSV</button>
-                <button onclick="exportToJSON()" class="btn-primary">📦 导出为JSON</button>
-                <button onclick="exportToExcel()" class="btn-primary">📊 导出为Excel</button>
-                <button onclick="printData()" class="btn-secondary">🖨️ 打印数据</button>
+                <button onclick="selectAll()" class="btn-secondary">
+                    <i class="fas fa-check-square"></i> 全选
+                </button>
+                <button onclick="deselectAll()" class="btn-secondary">
+                    <i class="far fa-square"></i> 取消全选
+                </button>
+                <button onclick="deleteSelected()" class="btn-danger">
+                    <i class="fas fa-trash"></i> 删除选中
+                </button>
+                <button onclick="backupData()" class="btn-success">
+                    <i class="fas fa-save"></i> 备份数据
+                </button>
+                <button onclick="refreshAll()" class="btn-purple">
+                    <i class="fas fa-sync-alt"></i> 刷新全部
+                </button>
             </div>
         </div>
     </div>
@@ -361,11 +667,10 @@
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>✏️ 编辑记录</h2>
+                <h2><i class="fas fa-edit"></i> 编辑记录</h2>
                 <span class="close" onclick="closeModal()">&times;</span>
             </div>
             <div id="editFormContainer">
-                <!-- 编辑表单将通过JS动态生成 -->
             </div>
         </div>
     </div>
@@ -411,28 +716,32 @@
                 currentPage = 1;
                 applyFilters();
             });
+            
+            // 监听日期变化
+            document.getElementById('startDate').addEventListener('change', applyFilters);
+            document.getElementById('endDate').addEventListener('change', applyFilters);
         });
         
         // 设置日期范围
-        function setDateRange(rangeType) {
+        function setDateRange(rangeType, buttonElement = null) {
             const today = new Date();
             const startDateInput = document.getElementById('startDate');
             const endDateInput = document.getElementById('endDate');
             
-            // 移除所有快速日期按钮的active类
-            document.querySelectorAll('.quick-date-group button').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // 为当前选择的按钮添加active类
-            event.target.classList.add('active');
+            // 更新按钮active状态
+            if (buttonElement) {
+                document.querySelectorAll('.quick-date-group button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                buttonElement.classList.add('active');
+            }
             
             let startDate, endDate;
             
             switch(rangeType) {
                 case 'week':
                     const weekStart = new Date(today);
-                    weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1); // 周一
+                    weekStart.setDate(weekStart.getDate() - weekStart.getDay() + (weekStart.getDay() === 0 ? -6 : 1));
                     startDate = weekStart.toISOString().split('T')[0];
                     endDate = today.toISOString().split('T')[0];
                     break;
@@ -462,15 +771,21 @@
                     endDate = today.toISOString().split('T')[0];
                     break;
                 case 'all':
-                    startDate = null;
-                    endDate = null;
+                    startDate = '';
+                    endDate = '';
                     break;
                 default:
                     return;
             }
             
-            if (startDate) startDateInput.value = startDate;
-            if (endDate) endDateInput.value = endDate;
+            startDateInput.value = startDate;
+            endDateInput.value = endDate;
+            
+            // 触发筛选
+            if (allRecords.length > 0) {
+                currentPage = 1;
+                applyFilters();
+            }
         }
         
         // 加载数据
@@ -479,10 +794,20 @@
             
             try {
                 const response = await fetch(`${API_BASE_URL}/records`);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
                 const data = await response.json();
                 
                 if (data.success) {
-                    allRecords = data.data;
+                    allRecords = data.data.map(record => ({
+                        ...record,
+                        totalClassics: (record.diamond || 0) + (record.amitabha || 0) + 
+                                     (record.guanyin || 0) + (record.puxian || 0) + (record.dizang || 0)
+                    }));
+                    
+                    // 更新统计信息
+                    updateStats();
                     
                     // 更新姓名列表
                     updateNameList();
@@ -490,7 +815,7 @@
                     // 应用筛选
                     applyFilters();
                     
-                    showMessage('数据加载成功', 'success');
+                    showMessage(`成功加载 ${allRecords.length} 条记录`, 'success');
                 } else {
                     showMessage('加载数据失败: ' + (data.error || '未知错误'), 'error');
                 }
@@ -502,21 +827,52 @@
             }
         }
         
+        // 更新统计信息
+        function updateStats() {
+            const statsContainer = document.getElementById('statsContainer');
+            
+            if (allRecords.length === 0) {
+                statsContainer.innerHTML = '<div class="stat-card"><h3>暂无数据</h3></div>';
+                return;
+            }
+            
+            // 计算统计数据
+            const totalRecords = allRecords.length;
+            const uniqueNames = [...new Set(allRecords.map(r => r.name))].length;
+            const totalClassics = allRecords.reduce((sum, r) => sum + r.totalClassics, 0);
+            const today = new Date().toISOString().split('T')[0];
+            const todayRecords = allRecords.filter(r => r.date === today).length;
+            
+            statsContainer.innerHTML = `
+                <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h3>总记录数</h3>
+                    <div class="value">${totalRecords}</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                    <h3>参与人数</h3>
+                    <div class="value">${uniqueNames}</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                    <h3>经典总数</h3>
+                    <div class="value">${totalClassics}</div>
+                </div>
+                <div class="stat-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                    <h3>今日提交</h3>
+                    <div class="value">${todayRecords}</div>
+                </div>
+            `;
+        }
+        
         // 更新姓名列表
         function updateNameList() {
-            // 从所有记录中提取唯一的姓名
             const names = [...new Set(allRecords.map(record => record.name))].sort();
             nameList = names;
             
             const filterNameSelect = document.getElementById('filterName');
-            
-            // 保存当前选中的值
             const currentValue = filterNameSelect.value;
             
-            // 清空现有选项（保留第一个"全部人员"选项）
             filterNameSelect.innerHTML = '<option value="">全部人员</option>';
             
-            // 添加姓名选项
             names.forEach(name => {
                 const option = document.createElement('option');
                 option.value = name;
@@ -524,7 +880,6 @@
                 filterNameSelect.appendChild(option);
             });
             
-            // 恢复之前选中的值（如果存在）
             if (nameList.includes(currentValue)) {
                 filterNameSelect.value = currentValue;
             }
@@ -532,65 +887,45 @@
         
         // 应用筛选
         function applyFilters() {
-            // 获取筛选条件
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
             const filterName = document.getElementById('filterName').value;
             const sortBy = document.getElementById('sortBy').value;
             
-            // 筛选记录
             currentRecords = allRecords.filter(record => {
-                // 日期筛选
                 const dateMatch = (!startDate || record.date >= startDate) && 
                                  (!endDate || record.date <= endDate);
-                
-                // 姓名筛选
                 const nameMatch = !filterName || record.name === filterName;
-                
                 return dateMatch && nameMatch;
             });
             
-            // 排序
             sortRecords(sortBy);
             
-            // 计算分页
             totalPages = Math.ceil(currentRecords.length / pageSize);
-            
-            // 确保当前页有效
             if (currentPage > totalPages) currentPage = 1;
             if (currentPage < 1) currentPage = 1;
             
-            // 显示数据
             displayRecords();
-            
-            // 更新分页
             updatePagination();
         }
         
         // 排序记录
-		function sortRecords(sortBy) {
-			switch(sortBy) {
-				case 'createdAt_desc':
-					currentRecords.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-					break;
-				case 'date_desc':
-					currentRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
-					break;
-				case 'name_asc':
-					currentRecords.sort((a, b) => a.name.localeCompare(b.name));
-					break;
-				case 'totalClassics_desc':
-					currentRecords.sort((a, b) => {
-						// 修复：计算经典总数时包含药师经
-						const totalA = (a.diamond || 0) + (a.amitabha || 0) + (a.guanyin || 0) + 
-									  (a.puxian || 0) + (a.dizang || 0) + (a.yaoshi || 0);
-						const totalB = (b.diamond || 0) + (b.amitabha || 0) + (b.guanyin || 0) + 
-									  (b.puxian || 0) + (b.dizang || 0) + (b.yaoshi || 0);
-						return totalB - totalA;
-					});
-					break;
-			}
-		}
+        function sortRecords(sortBy) {
+            switch(sortBy) {
+                case 'createdAt_desc':
+                    currentRecords.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                    break;
+                case 'date_desc':
+                    currentRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    break;
+                case 'name_asc':
+                    currentRecords.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                case 'totalClassics_desc':
+                    currentRecords.sort((a, b) => b.totalClassics - a.totalClassics);
+                    break;
+            }
+        }
         
         // 显示记录
         function displayRecords() {
@@ -606,145 +941,172 @@
         }
         
         // 显示表格视图
- {
-        const tbody = document.getElementById('dataTableBody');
-        
-        if (records.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="16" style="text-align: center; padding: 30px;">
-                        📭 暂无数据
-                    </td>
-                </tr>
-            `;
-            return;
+        function displayTableView(records) {
+            const tbody = document.getElementById('dataTableBody');
+            
+            if (records.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="15" style="text-align: center; padding: 30px; color: #6c757d;">
+                            <i class="fas fa-inbox" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                            暂无数据
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            
+            records.forEach(record => {
+                const isSelected = selectedRecords.has(record._id);
+                
+                html += `
+                    <tr data-id="${record._id}" class="${isSelected ? 'selected' : ''}">
+                        <td>
+                            <input type="checkbox" class="record-checkbox" 
+                                   data-id="${record._id}" 
+                                   ${isSelected ? 'checked' : ''}
+                                   onchange="toggleSelection('${record._id}')">
+                            <button onclick="editRecord('${record._id}')" class="btn-warning" title="编辑">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteRecord('${record._id}')" class="btn-danger" title="删除">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                        <td>${record.date}</td>
+                        <td><strong>${record.name}</strong></td>
+                        <td>${record.nineWord || 0}</td>
+                        <td>${record.buddhaWorship || 0}</td>
+                        <td>${record.quietZen || 0}</td>
+                        <td>${record.activeZen || 0}</td>
+                        <td>${record.diamond || 0}</td>
+                        <td>${record.amitabha || 0}</td>
+                        <td>${record.guanyin || 0}</td>
+                        <td>${record.puxian || 0}</td>
+                        <td>${record.dizang || 0}</td>
+                        <td><strong>${record.totalClassics}</strong></td>
+                        <td title="${record.remark || ''}" style="max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            ${record.remark || '-'}
+                        </td>
+                        <td>${formatDateTime(record.submitTime)}</td>
+                    </tr>
+                `;
+            });
+            
+            tbody.innerHTML = html;
         }
         
-        let html = '';
-        
-        records.forEach(record => {
-            // 修复：计算经典总数时包含药师经
-            const totalClassics = (record.diamond || 0) + (record.amitabha || 0) + (record.guanyin || 0) + 
-                                 (record.puxian || 0) + (record.dizang || 0) + (record.yaoshi || 0);
+        // 显示卡片视图
+        function displayCardsView(records) {
+            const container = document.getElementById('cardsView');
             
-            const isSelected = selectedRecords.has(record._id);
+            if (records.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: #6c757d;">
+                        <i class="fas fa-inbox" style="font-size: 36px; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <div>暂无数据</div>
+                    </div>
+                `;
+                return;
+            }
             
-            html += `
-                <tr data-id="${record._id}" class="${isSelected ? 'selected' : ''}">
-                    <td>
-                        <input type="checkbox" class="record-checkbox" 
-                               data-id="${record._id}" 
-                               ${isSelected ? 'checked' : ''}
-                               onchange="toggleSelection('${record._id}')">
-                        <button onclick="editRecord('${record._id}')" class="btn-warning" style="padding: 4px 6px; font-size: 11px;">✏️</button>
-                        <button onclick="deleteRecord('${record._id}')" class="btn-danger" style="padding: 4px 6px; font-size: 11px;">🗑️</button>
-                    </td>
-                    <td>${record.date}</td>
-                    <td>${record.name}</td>
-                    <td>${record.nineWord || 0}</td>
-                    <td>${record.buddhaWorship || 0}</td>
-                    <td>${record.quietZen || 0}</td>
-                    <td>${record.activeZen || 0}</td>
-                    <td>${record.diamond || 0}</td>
-                    <td>${record.amitabha || 0}</td>
-                    <td>${record.guanyin || 0}</td>
-                    <td>${record.puxian || 0}</td>
-                    <td>${record.dizang || 0}</td>
-                    <td>${record.yaoshi || 0}</td> <!-- 新增药师经列 -->
-                    <td><strong>${totalClassics}</strong></td>
-                    <td style="max-width: 150px; overflow: hidden; text-overflow: ellipsis;">${record.remark || ''}</td>
-                    <td>${formatDateTime(record.submitTime)}</td>
-                </tr>
-            `;
-        });
-        
-        tbody.innerHTML = html;
-    }
-        
-    // 显示卡片视图 - 修复经典总数计算
-    function displayCardsView(records) {
-        const container = document.getElementById('cardsView');
-        
-        if (records.length === 0) {
-            container.innerHTML = `
-                <div style="text-align: center; padding: 30px; color: #7f8c8d;">
-                    📭 暂无数据
-                </div>
-            `;
-            return;
+            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">';
+            
+            records.forEach(record => {
+                const isSelected = selectedRecords.has(record._id);
+                
+                html += `
+                    <div class="card ${isSelected ? 'selected' : ''}" data-id="${record._id}">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div>
+                                <h3 style="color: #2c3e50; margin: 0; font-size: 16px;">${record.name}</h3>
+                                <div style="color: #6c757d; font-size: 12px;">${record.date}</div>
+                            </div>
+                            <input type="checkbox" class="record-checkbox" 
+                                   data-id="${record._id}" 
+                                   ${isSelected ? 'checked' : ''}
+                                   onchange="toggleSelection('${record._id}')"
+                                   style="transform: scale(1.2);">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 10px;">
+                            <div style="font-size: 12px;">
+                                <div style="color: #6c757d;">九字禅</div>
+                                <strong>${record.nineWord || 0}</strong>
+                            </div>
+                            <div style="font-size: 12px;">
+                                <div style="color: #6c757d;">拜忏文</div>
+                                <strong>${record.buddhaWorship || 0}</strong>
+                            </div>
+                            <div style="font-size: 12px;">
+                                <div style="color: #6c757d;">静禅</div>
+                                <strong>${record.quietZen || 0}分</strong>
+                            </div>
+                            <div style="font-size: 12px;">
+                                <div style="color: #6c757d;">动禅</div>
+                                <strong>${record.activeZen || 0}分</strong>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                            <div style="font-weight: 600; margin-bottom: 5px; font-size: 12px; color: #495057;">经典诵读</div>
+                            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; font-size: 11px;">
+                                <div>金刚经: ${record.diamond || 0}</div>
+                                <div>阿弥陀经: ${record.amitabha || 0}</div>
+                                <div>普门品: ${record.guanyin || 0}</div>
+                                <div>普贤品: ${record.puxian || 0}</div>
+                                <div>地藏经: ${record.dizang || 0}</div>
+                                <div style="color: #3498db; font-weight: bold;">总计: ${record.totalClassics}</div>
+                            </div>
+                        </div>
+                        
+                        ${record.remark ? `
+                            <div style="font-style: italic; color: #6c757d; font-size: 11px; margin-bottom: 10px; padding: 5px; background: #f8f9fa; border-radius: 3px;">
+                                ${record.remark}
+                            </div>` : ''}
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 11px; color: #adb5bd;">
+                            <div>${formatDateTime(record.submitTime)}</div>
+                            <div>
+                                <button onclick="editRecord('${record._id}')" class="btn-warning" style="padding: 4px 8px; font-size: 11px;">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="deleteRecord('${record._id}')" class="btn-danger" style="padding: 4px 8px; font-size: 11px;">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            container.innerHTML = html;
         }
-        
-        let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;">';
-        
-        records.forEach(record => {
-            // 修复：计算经典总数时包含药师经
-            const totalClassics = (record.diamond || 0) + (record.amitabha || 0) + (record.guanyin || 0) + 
-                                 (record.puxian || 0) + (record.dizang || 0) + (record.yaoshi || 0);
-            
-            html += `
-                <div class="combined-controls" style="padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);" data-id="${record._id}">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <h3 style="color: #2c3e50; font-size: 16px;">${record.name}</h3>
-                        <input type="checkbox" class="record-checkbox" 
-                               data-id="${record._id}" 
-                               onchange="toggleSelection('${record._id}')">
-                    </div>
-                    <div style="color: #7f8c8d; margin-bottom: 8px; font-size: 12px;">${record.date}</div>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px; font-size: 12px;">
-                        <div>九字禅: <strong>${record.nineWord || 0}</strong></div>
-                        <div>拜忏文: <strong>${record.buddhaWorship || 0}</strong></div>
-                        <div>静禅: <strong>${record.quietZen || 0}分</strong></div>
-                        <div>动禅: <strong>${record.activeZen || 0}分</strong></div>
-                    </div>
-                    
-                    <div style="background: #f8f9fa; padding: 8px; border-radius: 5px; margin-bottom: 12px; font-size: 12px;">
-                        <div style="font-weight: bold; margin-bottom: 5px;">经典诵读:</div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;">
-                            <div>金刚经: ${record.diamond || 0}</div>
-                            <div>阿弥陀经: ${record.amitabha || 0}</div>
-                            <div>普门品: ${record.guanyin || 0}</div>
-                            <div>普贤品: ${record.puxian || 0}</div>
-                            <div>地藏经: ${record.dizang || 0}</div>
-                            <div>药师经: ${record.yaoshi || 0}</div>
-                            <div><strong>总计: ${totalClassics}</strong></div>
-                        </div>
-                    </div>
-                    
-                    ${record.remark ? `<div style="font-style: italic; color: #666; font-size: 12px; margin-bottom: 8px;">${record.remark}</div>` : ''}
-                    
-                    <div style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 11px; color: #95a5a6;">
-                        <div>${formatDateTime(record.submitTime)}</div>
-                        <div>
-                            <button onclick="editRecord('${record._id}')" class="btn-warning" style="padding: 3px 6px; font-size: 10px;">编辑</button>
-                            <button onclick="deleteRecord('${record._id}')" class="btn-danger" style="padding: 3px 6px; font-size: 10px;">删除</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-        
-        html += '</div>';
-        container.innerHTML = html;
-    }
         
         // 更新分页
         function updatePagination() {
             const pagination = document.getElementById('pagination');
             
             if (totalPages <= 1) {
-                pagination.innerHTML = '';
+                pagination.innerHTML = `
+                    <div style="color: #6c757d; padding: 10px; text-align: center;">
+                        共 ${currentRecords.length} 条记录
+                    </div>
+                `;
                 return;
             }
             
             let html = '';
             
-            // 上一页按钮
             if (currentPage > 1) {
-                html += `<button onclick="changePage(${currentPage - 1})" class="btn-secondary">上一页</button>`;
+                html += `<button onclick="changePage(${currentPage - 1})" class="btn-secondary">
+                            <i class="fas fa-chevron-left"></i>
+                         </button>`;
             }
             
-            // 页码按钮
             const maxVisiblePages = 5;
             let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
             let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
@@ -753,55 +1115,66 @@
                 startPage = Math.max(1, endPage - maxVisiblePages + 1);
             }
             
+            if (startPage > 1) {
+                html += `<button onclick="changePage(1)" class="btn-secondary">1</button>`;
+                if (startPage > 2) html += `<span style="padding: 8px;">...</span>`;
+            }
+            
             for (let i = startPage; i <= endPage; i++) {
                 html += `<button onclick="changePage(${i})" class="${i === currentPage ? 'active-page' : 'btn-secondary'}">${i}</button>`;
             }
             
-            // 下一页按钮
-            if (currentPage < totalPages) {
-                html += `<button onclick="changePage(${currentPage + 1})" class="btn-secondary">下一页</button>`;
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) html += `<span style="padding: 8px;">...</span>`;
+                html += `<button onclick="changePage(${totalPages})" class="btn-secondary">${totalPages}</button>`;
             }
+            
+            if (currentPage < totalPages) {
+                html += `<button onclick="changePage(${currentPage + 1})" class="btn-secondary">
+                            <i class="fas fa-chevron-right"></i>
+                         </button>`;
+            }
+            
+            html += `<div style="color: #6c757d; padding: 8px; font-size: 13px; margin-left: 10px;">
+                        第 ${currentPage} / ${totalPages} 页，共 ${currentRecords.length} 条记录
+                    </div>`;
             
             pagination.innerHTML = html;
         }
         
+        // 切换页面
+        function changePage(page) {
+            currentPage = page;
+            applyFilters();
+            // 滚动到顶部
+            document.querySelector('.data-table').scrollIntoView({ behavior: 'smooth' });
+        }
+        
         // 重置筛选
         function resetFilters() {
-            // 重置日期范围
-            const today = new Date();
-            const weekStart = new Date(today);
-            weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1);
-            
-            document.getElementById('startDate').value = weekStart.toISOString().split('T')[0];
-            document.getElementById('endDate').value = today.toISOString().split('T')[0];
-            
-            // 重置姓名筛选
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
             document.getElementById('filterName').value = '';
-            
-            // 重置排序
             document.getElementById('sortBy').value = 'createdAt_desc';
             
-            // 重置快速日期按钮状态
             document.querySelectorAll('.quick-date-group button').forEach(btn => {
                 btn.classList.remove('active');
             });
-            document.querySelector('.quick-date-group button:nth-child(1)').classList.add('active');
             
             currentPage = 1;
             applyFilters();
+            showMessage('筛选条件已重置', 'info');
         }
         
         // 切换视图模式
         function setViewMode(mode) {
             viewMode = mode;
             
-            // 更新按钮状态
             document.querySelectorAll('.view-mode button').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // 显示对应视图
             if (mode === 'table') {
                 document.getElementById('tableView').style.display = 'block';
                 document.getElementById('cardsView').style.display = 'none';
@@ -813,13 +1186,19 @@
             displayRecords();
         }
         
+        // 显示导出选项
+        function showExportOptions() {
+            const exportDiv = document.getElementById('exportOptions');
+            exportDiv.style.display = exportDiv.style.display === 'none' ? 'block' : 'none';
+        }
+        
         // 刷新全部
         function refreshAll() {
             loadData();
-            showMessage('数据已刷新', 'success');
+            showMessage('正在刷新数据...', 'info');
         }
         
-        // 其他辅助函数保持不变...
+        // 选择/取消选择记录
         function toggleSelection(recordId) {
             if (selectedRecords.has(recordId)) {
                 selectedRecords.delete(recordId);
@@ -827,9 +1206,9 @@
                 selectedRecords.add(recordId);
             }
             
-            const row = document.querySelector(`[data-id="${recordId}"]`);
-            if (row) {
-                row.classList.toggle('selected');
+            const element = document.querySelector(`[data-id="${recordId}"]`);
+            if (element) {
+                element.classList.toggle('selected');
             }
         }
         
@@ -847,6 +1226,7 @@
             });
             
             displayRecords();
+            showMessage(`已选择本页所有记录`, 'info');
         }
         
         function deselectAll() {
@@ -857,15 +1237,17 @@
             });
             
             displayRecords();
+            showMessage('已取消所有选择', 'info');
         }
         
+        // 删除选中的记录
         async function deleteSelected() {
             if (selectedRecords.size === 0) {
                 showMessage('请先选择要删除的记录', 'info');
                 return;
             }
             
-            if (!confirm(`确定要删除选中的 ${selectedRecords.size} 条记录吗？`)) {
+            if (!confirm(`确定要删除选中的 ${selectedRecords.size} 条记录吗？此操作不可撤销！`)) {
                 return;
             }
             
@@ -873,44 +1255,66 @@
             
             try {
                 let deletedCount = 0;
+                let failedCount = 0;
+                
                 for (const id of selectedRecords) {
-                    const result = await deleteRecordFromServer(id);
-                    if (result.success) deletedCount++;
+                    try {
+                        const response = await fetch(`${API_BASE_URL}/delete`, {
+                            method: 'DELETE',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ id }),
+                        });
+                        
+                        const data = await response.json();
+                        if (data.success) {
+                            deletedCount++;
+                        } else {
+                            failedCount++;
+                            console.error(`删除记录 ${id} 失败:`, data.error);
+                        }
+                    } catch (error) {
+                        failedCount++;
+                        console.error(`删除记录 ${id} 失败:`, error);
+                    }
                 }
                 
                 selectedRecords.clear();
-                showMessage(`成功删除 ${deletedCount} 条记录`, 'success');
-                refreshAll();
+                
+                if (failedCount === 0) {
+                    showMessage(`成功删除 ${deletedCount} 条记录`, 'success');
+                } else {
+                    showMessage(`删除完成，成功 ${deletedCount} 条，失败 ${failedCount} 条`, 'warning');
+                }
+                
+                // 重新加载数据
+                loadData();
                 
             } catch (error) {
-                console.error('删除失败:', error);
-                showMessage('删除记录失败: ' + error.message, 'error');
+                console.error('批量删除失败:', error);
+                showMessage('删除记录时发生错误', 'error');
             } finally {
                 showLoading(false);
             }
         }
         
-        async function deleteRecordFromServer(id) {
-            const response = await fetch(`${API_BASE_URL}/delete`, {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id }),
-            });
-            
-            return await response.json();
-        }
-        
+        // 删除单条记录
         async function deleteRecord(id) {
-            if (!confirm('确定要删除这条记录吗？')) {
+            if (!confirm('确定要删除这条记录吗？此操作不可撤销！')) {
                 return;
             }
             
             try {
-                const data = await deleteRecordFromServer(id);
+                const response = await fetch(`${API_BASE_URL}/delete`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id }),
+                });
+                
+                const data = await response.json();
                 
                 if (data.success) {
                     showMessage('记录已删除', 'success');
-                    refreshAll();
+                    loadData();
                 } else {
                     showMessage(data.error || '删除失败', 'error');
                 }
@@ -920,16 +1324,16 @@
             }
         }
         
-        // 编辑记录和提交编辑函数保持不变...
+        // 编辑记录
         async function editRecord(id) {
             const record = allRecords.find(r => r._id === id);
             if (!record) return;
             
             const formHtml = `
-                <form id="editRecordForm">
+                <form id="editRecordForm" onsubmit="submitEdit(); return false;">
                     <input type="hidden" id="editId" value="${record._id}">
                     
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 15px;">
                         <div class="form-group-compact">
                             <label>日期 *</label>
                             <input type="date" id="editDate" value="${record.date}" required>
@@ -938,12 +1342,15 @@
                             <label>姓名 *</label>
                             <input type="text" id="editName" value="${record.name}" required>
                         </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 15px;">
                         <div class="form-group-compact">
                             <label>九字禅（声）</label>
                             <input type="number" id="editNineWord" value="${record.nineWord || 0}" min="0">
                         </div>
                         <div class="form-group-compact">
-                            <label>礼佛拜忏文（遍）</label>
+                            <label>拜忏文（遍）</label>
                             <input type="number" id="editBuddhaWorship" value="${record.buddhaWorship || 0}" min="0">
                         </div>
                         <div class="form-group-compact">
@@ -956,26 +1363,44 @@
                         </div>
                     </div>
                     
-                    <div style="margin: 12px 0;">
-                        <h4 style="font-size: 14px; margin-bottom: 8px;">经典诵读（遍）</h4>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; font-size: 13px;">
-                            <div>金刚经: <input type="number" id="editDiamond" value="${record.diamond || 0}" min="0" max="10" style="width: 50px;"></div>
-                            <div>阿弥陀经: <input type="number" id="editAmitabha" value="${record.amitabha || 0}" min="0" max="10" style="width: 50px;"></div>
-                            <div>普门品: <input type="number" id="editGuanyin" value="${record.guanyin || 0}" min="0" max="10" style="width: 50px;"></div>
-                            <div>普贤品: <input type="number" id="editPuxian" value="${record.puxian || 0}" min="0" max="10" style="width: 50px;"></div>
-                            <div>地藏经: <input type="number" id="editDizang" value="${record.dizang || 0}" min="0" max="10" style="width: 50px;"></div>
-                            <div>药师经: <input type="number" id="editYaoshi" value="${record.yaoshi || 0}" min="0" max="10" style="width: 50px;"></div>							
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: #495057;">经典诵读（遍）</div>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                            <div class="form-group-compact">
+                                <label>金刚经</label>
+                                <input type="number" id="editDiamond" value="${record.diamond || 0}" min="0" max="999">
+                            </div>
+                            <div class="form-group-compact">
+                                <label>阿弥陀经</label>
+                                <input type="number" id="editAmitabha" value="${record.amitabha || 0}" min="0" max="999">
+                            </div>
+                            <div class="form-group-compact">
+                                <label>普门品</label>
+                                <input type="number" id="editGuanyin" value="${record.guanyin || 0}" min="0" max="999">
+                            </div>
+                            <div class="form-group-compact">
+                                <label>普贤品</label>
+                                <input type="number" id="editPuxian" value="${record.puxian || 0}" min="0" max="999">
+                            </div>
+                            <div class="form-group-compact">
+                                <label>地藏经</label>
+                                <input type="number" id="editDizang" value="${record.dizang || 0}" min="0" max="999">
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="form-group-compact">
+                    <div class="form-group-compact" style="margin-bottom: 20px;">
                         <label>备注</label>
-                        <textarea id="editRemark" rows="2" style="width: 100%; font-size: 13px;">${record.remark || ''}</textarea>
+                        <textarea id="editRemark" rows="3" style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px;">${record.remark || ''}</textarea>
                     </div>
                     
-                    <div style="display: flex; gap: 8px; margin-top: 15px;">
-                        <button type="button" onclick="submitEdit()" class="btn-success">保存修改</button>
-                        <button type="button" onclick="closeModal()" class="btn-secondary">取消</button>
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button type="button" onclick="closeModal()" class="btn-secondary" style="padding: 10px 20px;">
+                            取消
+                        </button>
+                        <button type="submit" class="btn-success" style="padding: 10px 20px;">
+                            <i class="fas fa-save"></i> 保存修改
+                        </button>
                     </div>
                 </form>
             `;
@@ -984,11 +1409,12 @@
             document.getElementById('editModal').style.display = 'block';
         }
         
+        // 提交编辑
         async function submitEdit() {
             const id = document.getElementById('editId').value;
             const updateData = {
                 date: document.getElementById('editDate').value,
-                name: document.getElementById('editName').value,
+                name: document.getElementById('editName').value.trim(),
                 nineWord: parseInt(document.getElementById('editNineWord').value) || 0,
                 buddhaWorship: parseInt(document.getElementById('editBuddhaWorship').value) || 0,
                 quietZen: parseInt(document.getElementById('editQuietZen').value) || 0,
@@ -998,14 +1424,15 @@
                 guanyin: parseInt(document.getElementById('editGuanyin').value) || 0,
                 puxian: parseInt(document.getElementById('editPuxian').value) || 0,
                 dizang: parseInt(document.getElementById('editDizang').value) || 0,
-				yaoshi: parseInt(document.getElementById('editYaoshi').value) || 0, // 新增药师佛经
-                remark: document.getElementById('editRemark').value,
+                remark: document.getElementById('editRemark').value.trim(),
             };
             
             if (!updateData.date || !updateData.name) {
                 showMessage('日期和姓名为必填项', 'error');
                 return;
             }
+            
+            showLoading(true);
             
             try {
                 const response = await fetch(`${API_BASE_URL}/update`, {
@@ -1019,48 +1446,44 @@
                 if (data.success) {
                     showMessage('记录更新成功', 'success');
                     closeModal();
-                    refreshAll();
+                    loadData();
                 } else {
                     showMessage(data.error || '更新失败', 'error');
                 }
             } catch (error) {
                 console.error('更新失败:', error);
                 showMessage('更新失败: ' + error.message, 'error');
+            } finally {
+                showLoading(false);
             }
         }
         
         // 导出数据
-        function exportData() {
-            const exportDiv = document.querySelector('.export-options');
-            exportDiv.style.display = exportDiv.style.display === 'none' ? 'block' : 'none';
-        }
-        
         function exportToCSV() {
-            if (allRecords.length === 0) {
+            if (currentRecords.length === 0) {
                 showMessage('没有数据可导出', 'info');
                 return;
             }
             
-            let csv = '日期,姓名,九字禅(声),拜忏文(遍),静禅(分钟),动禅(分钟),金刚经,阿弥陀经,普门品,普贤品,地藏经,药师经,经典总数,备注,提交时间\n';
+            let csv = '日期,姓名,九字禅(声),拜忏文(遍),静禅(分钟),动禅(分钟),金刚经,阿弥陀经,普门品,普贤品,地藏经,经典总数,备注,提交时间\n';
             
-            allRecords.forEach(record => {
-                // 计算经典总数（包含药师佛经）
-                const total = (record.diamond || 0) + (record.amitabha || 0) + (record.guanyin || 0) + 
-                             (record.puxian || 0) + (record.dizang || 0) + (record.yaoshi || 0);
-                csv += `${record.date},${record.name},${record.nineWord || 0},${record.buddhaWorship || 0},${record.quietZen || 0},${record.activeZen || 0},${record.diamond || 0},${record.amitabha || 0},${record.guanyin || 0},${record.puxian || 0},${record.dizang || 0},${record.yaoshi || 0},${total},"${record.remark || ''}",${record.submitTime}\n`;
+            currentRecords.forEach(record => {
+                csv += `"${record.date}","${record.name}",${record.nineWord || 0},${record.buddhaWorship || 0},${record.quietZen || 0},${record.activeZen || 0},${record.diamond || 0},${record.amitabha || 0},${record.guanyin || 0},${record.puxian || 0},${record.dizang || 0},${record.totalClassics},"${(record.remark || '').replace(/"/g, '""')}","${record.submitTime}"\n`;
             });
             
-            downloadFile(csv, '功课记录.csv', 'text/csv');
+            downloadFile(csv, `功课记录_${new Date().toISOString().slice(0,10)}.csv`, 'text/csv;charset=utf-8;');
+            showMessage('CSV文件已开始下载', 'success');
         }
         
         function exportToJSON() {
-            if (allRecords.length === 0) {
+            if (currentRecords.length === 0) {
                 showMessage('没有数据可导出', 'info');
                 return;
             }
             
-            const json = JSON.stringify(allRecords, null, 2);
-            downloadFile(json, '功课记录.json', 'application/json');
+            const json = JSON.stringify(currentRecords, null, 2);
+            downloadFile(json, `功课记录_${new Date().toISOString().slice(0,10)}.json`, 'application/json');
+            showMessage('JSON文件已开始下载', 'success');
         }
         
         function exportToExcel() {
@@ -1068,7 +1491,66 @@
         }
         
         function printData() {
-            window.print();
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>功课记录打印</title>
+                        <style>
+                            body { font-family: Arial, sans-serif; margin: 20px; }
+                            h1 { text-align: center; color: #2c3e50; }
+                            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                            th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+                            th { background-color: #f2f2f2; }
+                            .print-date { text-align: right; margin-bottom: 20px; }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>功课数据记录</h1>
+                        <div class="print-date">打印时间: ${new Date().toLocaleString()}</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>日期</th>
+                                    <th>姓名</th>
+                                    <th>九字禅</th>
+                                    <th>拜忏文</th>
+                                    <th>静禅</th>
+                                    <th>动禅</th>
+                                    <th>金刚经</th>
+                                    <th>阿弥陀经</th>
+                                    <th>普门品</th>
+                                    <th>普贤品</th>
+                                    <th>地藏经</th>
+                                    <th>经典总数</th>
+                                    <th>备注</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${currentRecords.map(record => `
+                                    <tr>
+                                        <td>${record.date}</td>
+                                        <td>${record.name}</td>
+                                        <td>${record.nineWord || 0}</td>
+                                        <td>${record.buddhaWorship || 0}</td>
+                                        <td>${record.quietZen || 0}</td>
+                                        <td>${record.activeZen || 0}</td>
+                                        <td>${record.diamond || 0}</td>
+                                        <td>${record.amitabha || 0}</td>
+                                        <td>${record.guanyin || 0}</td>
+                                        <td>${record.puxian || 0}</td>
+                                        <td>${record.dizang || 0}</td>
+                                        <td>${record.totalClassics}</td>
+                                        <td>${record.remark || ''}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
         }
         
         function backupData() {
@@ -1076,25 +1558,26 @@
             showMessage('数据备份已开始下载', 'success');
         }
         
+        // 辅助函数
         function downloadFile(content, fileName, contentType) {
             const blob = new Blob(['\uFEFF' + content], { type: contentType });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             a.download = fileName;
+            document.body.appendChild(a);
             a.click();
+            document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
         }
         
         function formatDateTime(dateTime) {
             if (!dateTime) return '';
             const date = new Date(dateTime);
-            return date.toLocaleString('zh-CN');
-        }
-        
-        function changePage(page) {
-            currentPage = page;
-            applyFilters();
+            return date.toLocaleDateString('zh-CN') + ' ' + date.toLocaleTimeString('zh-CN', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
         }
         
         function showLoading(show) {
@@ -1109,12 +1592,38 @@
             
             setTimeout(() => {
                 messageDiv.style.display = 'none';
-            }, 3000);
+            }, 5000);
         }
         
         function closeModal() {
             document.getElementById('editModal').style.display = 'none';
         }
+        
+        // 添加键盘快捷键支持
+        document.addEventListener('keydown', function(event) {
+            // Ctrl+F 聚焦到筛选框
+            if (event.ctrlKey && event.key === 'f') {
+                event.preventDefault();
+                document.getElementById('filterName').focus();
+            }
+            
+            // Ctrl+R 刷新数据
+            if (event.ctrlKey && event.key === 'r') {
+                event.preventDefault();
+                refreshAll();
+            }
+            
+            // Esc 关闭模态框
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+            
+            // Ctrl+A 全选当前页
+            if (event.ctrlKey && event.key === 'a') {
+                event.preventDefault();
+                selectAll();
+            }
+        });
     </script>
 </body>
 </html>
