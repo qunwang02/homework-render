@@ -13,7 +13,7 @@
         }
         
         .container { 
-            max-width: 1400px; 
+            max-width: 1600px; 
             margin: 0 auto; 
             background: white; 
             border-radius: 15px; 
@@ -245,13 +245,13 @@
             width: 100%; 
             border-collapse: collapse; 
             margin-top: 15px; 
-            font-size: 13px;
+            font-size: 12px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .data-table th, .data-table td { 
             border: 1px solid #dee2e6; 
-            padding: 8px 10px; 
+            padding: 6px 8px; 
             text-align: center; 
         }
         
@@ -261,6 +261,7 @@
             font-weight: 600;
             position: sticky;
             top: 0;
+            white-space: nowrap;
         }
         
         .data-table tr:nth-child(even) { background: #f8f9fa; }
@@ -510,7 +511,7 @@
             padding: 25px; 
             border-radius: 10px; 
             width: 90%; 
-            max-width: 500px; 
+            max-width: 600px; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.2);
             animation: modalSlideIn 0.3s ease-out;
         }
@@ -554,7 +555,46 @@
             color: #000; 
         }
         
+        /* 经典网格 - 调整以适应更多经典 */
+        .classics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .classic-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .classic-label {
+            color: #6c757d;
+            font-size: 11px;
+            margin-bottom: 2px;
+        }
+        
+        .classic-value {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 13px;
+        }
+        
         /* 响应式调整 */
+        @media (max-width: 1200px) {
+            .data-table {
+                font-size: 11px;
+            }
+            
+            .data-table th, .data-table td {
+                padding: 5px 6px;
+            }
+            
+            .classics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
         @media (max-width: 992px) {
             .quick-date-group {
                 grid-template-columns: repeat(3, 1fr);
@@ -582,11 +622,11 @@
             }
             
             .data-table {
-                font-size: 12px;
+                font-size: 10px;
             }
             
             .data-table th, .data-table td {
-                padding: 6px 8px;
+                padding: 4px 5px;
             }
             
             .modal-content {
@@ -601,6 +641,10 @@
                 font-size: 14px !important;
                 min-width: 70px;
                 height: 40px;
+            }
+            
+            .classics-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
         
@@ -636,6 +680,10 @@
             .card-action-btn {
                 width: 100%;
                 margin: 2px 0;
+            }
+            
+            .classics-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -782,6 +830,7 @@
                                 <th>动禅</th>
                                 <th>金刚经</th>
                                 <th>阿弥陀经</th>
+                                <th>药师经</th>
                                 <th>普门品</th>
                                 <th>普贤品</th>
                                 <th>地藏经</th>
@@ -962,8 +1011,11 @@
                 if (data.success) {
                     allRecords = data.data.map(record => ({
                         ...record,
+                        // 确保药师经字段存在，兼容旧数据
+                        yaoshi: record.yaoshi || 0,
                         totalClassics: (record.diamond || 0) + (record.amitabha || 0) + 
-                                     (record.guanyin || 0) + (record.puxian || 0) + (record.dizang || 0)
+                                     (record.yaoshi || 0) + (record.guanyin || 0) + 
+                                     (record.puxian || 0) + (record.dizang || 0)
                     }));
                     
                     // 更新统计信息
@@ -1100,14 +1152,14 @@
             }
         }
         
-        // 显示表格视图
+        // 显示表格视图 - 添加药师经列
         function displayTableView(records) {
             const tbody = document.getElementById('dataTableBody');
             
             if (records.length === 0) {
                 tbody.innerHTML = `
                     <tr>
-                        <td colspan="15" style="text-align: center; padding: 30px; color: #6c757d;">
+                        <td colspan="16" style="text-align: center; padding: 30px; color: #6c757d;">
                             <i class="fas fa-inbox" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
                             暂无数据
                         </td>
@@ -1143,6 +1195,7 @@
                         <td>${record.activeZen || 0}</td>
                         <td>${record.diamond || 0}</td>
                         <td>${record.amitabha || 0}</td>
+                        <td>${record.yaoshi || 0}</td>
                         <td>${record.guanyin || 0}</td>
                         <td>${record.puxian || 0}</td>
                         <td>${record.dizang || 0}</td>
@@ -1158,7 +1211,7 @@
             tbody.innerHTML = html;
         }
         
-        // 显示卡片视图 - 修改后的版本，按钮更大更清晰
+        // 显示卡片视图 - 添加药师经
         function displayCardsView(records) {
             const container = document.getElementById('cardsView');
             
@@ -1172,7 +1225,7 @@
                 return;
             }
             
-            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">';
+            let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px;">';
             
             records.forEach(record => {
                 const isSelected = selectedRecords.has(record._id);
@@ -1212,30 +1265,33 @@
                             
                             <div class="card-section">
                                 <div class="card-section-title">经典诵读 (遍)</div>
-                                <div class="card-section-content">
-                                    <div class="card-section-item">
-                                        <span>金刚经</span>
-                                        <strong>${record.diamond || 0}</strong>
+                                <div class="classics-grid">
+                                    <div class="classic-item">
+                                        <span class="classic-label">金刚经</span>
+                                        <strong class="classic-value">${record.diamond || 0}</strong>
                                     </div>
-                                    <div class="card-section-item">
-                                        <span>阿弥陀经</span>
-                                        <strong>${record.amitabha || 0}</strong>
+                                    <div class="classic-item">
+                                        <span class="classic-label">阿弥陀经</span>
+                                        <strong class="classic-value">${record.amitabha || 0}</strong>
                                     </div>
-                                    <div class="card-section-item">
-                                        <span>普门品</span>
-                                        <strong>${record.guanyin || 0}</strong>
+                                    <div class="classic-item">
+                                        <span class="classic-label">药师经</span>
+                                        <strong class="classic-value">${record.yaoshi || 0}</strong>
                                     </div>
-                                    <div class="card-section-item">
-                                        <span>普贤品</span>
-                                        <strong>${record.puxian || 0}</strong>
+                                    <div class="classic-item">
+                                        <span class="classic-label">普门品</span>
+                                        <strong class="classic-value">${record.guanyin || 0}</strong>
                                     </div>
-                                    <div class="card-section-item">
-                                        <span>地藏经</span>
-                                        <strong>${record.dizang || 0}</strong>
+                                    <div class="classic-item">
+                                        <span class="classic-label">普贤品</span>
+                                        <strong class="classic-value">${record.puxian || 0}</strong>
                                     </div>
-                                    <div class="card-section-item">
-                                        <span class="card-total">总计</span>
-                                        <strong class="card-total">${record.totalClassics}</strong>
+                                    <div class="classic-item">
+                                        <span class="classic-label">地藏经</span>
+                                        <strong class="classic-value">${record.dizang || 0}</strong>
+                                    </div>
+                                    <div class="classic-item" style="grid-column: span 3; text-align: center;">
+                                        <span class="card-total" style="font-size: 14px;">经典总计: ${record.totalClassics} 遍</span>
                                     </div>
                                 </div>
                             </div>
@@ -1503,7 +1559,7 @@
             }
         }
         
-        // 编辑记录
+        // 编辑记录 - 添加药师经字段
         async function editRecord(id) {
             const record = allRecords.find(r => r._id === id);
             if (!record) return;
@@ -1544,7 +1600,7 @@
                     
                     <div style="margin-bottom: 15px;">
                         <div style="font-weight: 600; margin-bottom: 8px; color: #495057;">经典诵读（遍）</div>
-                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
                             <div class="form-group-compact">
                                 <label>金刚经</label>
                                 <input type="number" id="editDiamond" value="${record.diamond || 0}" min="0" max="999">
@@ -1552,6 +1608,10 @@
                             <div class="form-group-compact">
                                 <label>阿弥陀经</label>
                                 <input type="number" id="editAmitabha" value="${record.amitabha || 0}" min="0" max="999">
+                            </div>
+                            <div class="form-group-compact">
+                                <label>药师经</label>
+                                <input type="number" id="editYaoshi" value="${record.yaoshi || 0}" min="0" max="999">
                             </div>
                             <div class="form-group-compact">
                                 <label>普门品</label>
@@ -1588,7 +1648,7 @@
             document.getElementById('editModal').style.display = 'block';
         }
         
-        // 提交编辑
+        // 提交编辑 - 添加药师经字段
         async function submitEdit() {
             const id = document.getElementById('editId').value;
             const updateData = {
@@ -1600,6 +1660,7 @@
                 activeZen: parseInt(document.getElementById('editActiveZen').value) || 0,
                 diamond: parseInt(document.getElementById('editDiamond').value) || 0,
                 amitabha: parseInt(document.getElementById('editAmitabha').value) || 0,
+                yaoshi: parseInt(document.getElementById('editYaoshi').value) || 0,
                 guanyin: parseInt(document.getElementById('editGuanyin').value) || 0,
                 puxian: parseInt(document.getElementById('editPuxian').value) || 0,
                 dizang: parseInt(document.getElementById('editDizang').value) || 0,
@@ -1637,17 +1698,17 @@
             }
         }
         
-        // 导出数据
+        // 导出数据 - 添加药师经字段
         function exportToCSV() {
             if (currentRecords.length === 0) {
                 showMessage('没有数据可导出', 'info');
                 return;
             }
             
-            let csv = '日期,姓名,九字禅(声),拜忏文(遍),静禅(分钟),动禅(分钟),金刚经,阿弥陀经,普门品,普贤品,地藏经,经典总数,备注,提交时间\n';
+            let csv = '日期,姓名,九字禅(声),拜忏文(遍),静禅(分钟),动禅(分钟),金刚经,阿弥陀经,药师经,普门品,普贤品,地藏经,经典总数,备注,提交时间\n';
             
             currentRecords.forEach(record => {
-                csv += `"${record.date}","${record.name}",${record.nineWord || 0},${record.buddhaWorship || 0},${record.quietZen || 0},${record.activeZen || 0},${record.diamond || 0},${record.amitabha || 0},${record.guanyin || 0},${record.puxian || 0},${record.dizang || 0},${record.totalClassics},"${(record.remark || '').replace(/"/g, '""')}","${record.submitTime}"\n`;
+                csv += `"${record.date}","${record.name}",${record.nineWord || 0},${record.buddhaWorship || 0},${record.quietZen || 0},${record.activeZen || 0},${record.diamond || 0},${record.amitabha || 0},${record.yaoshi || 0},${record.guanyin || 0},${record.puxian || 0},${record.dizang || 0},${record.totalClassics},"${(record.remark || '').replace(/"/g, '""')}","${record.submitTime}"\n`;
             });
             
             downloadFile(csv, `功课记录_${new Date().toISOString().slice(0,10)}.csv`, 'text/csv;charset=utf-8;');
@@ -1698,6 +1759,7 @@
                                     <th>动禅</th>
                                     <th>金刚经</th>
                                     <th>阿弥陀经</th>
+                                    <th>药师经</th>
                                     <th>普门品</th>
                                     <th>普贤品</th>
                                     <th>地藏经</th>
@@ -1716,6 +1778,7 @@
                                         <td>${record.activeZen || 0}</td>
                                         <td>${record.diamond || 0}</td>
                                         <td>${record.amitabha || 0}</td>
+                                        <td>${record.yaoshi || 0}</td>
                                         <td>${record.guanyin || 0}</td>
                                         <td>${record.puxian || 0}</td>
                                         <td>${record.dizang || 0}</td>
