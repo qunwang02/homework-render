@@ -104,7 +104,7 @@ router.post('/submit', ensureDatabase, async (req, res) => {
     const now = new Date();
     console.log('📝 [提交] 正在准备数据...');
     
-    // 准备数据
+    // 准备数据 - 添加药师经字段
     const homeworkRecord = {
       date: record.date,
       name: record.name,
@@ -232,7 +232,7 @@ router.get('/records', ensureDatabase, async (req, res) => {
       homeworkCollection.countDocuments({})
     ]);
     
-    // 格式化数据
+    // 格式化数据 - 添加药师经字段
     const formattedData = records.map(item => ({
       _id: item._id.toString(),
       date: item.date || new Date(item.submittedAt).toISOString().split('T')[0],
@@ -386,7 +386,7 @@ router.get('/stats', ensureDatabase, async (req, res) => {
         { $sort: { count: -1 } }
       ]).toArray(),
       
-      // 经典统计
+      // 经典统计 - 添加药师经统计
       homeworkCollection.aggregate([
         { $group: {
           _id: null,
@@ -398,7 +398,7 @@ router.get('/stats', ensureDatabase, async (req, res) => {
           totalAmitabha: { $sum: '$amitabha' },
           totalGuanyin: { $sum: '$guanyin' },
           totalPuxian: { $sum: '$puxian' },
-          totalDizang: { $sum: '$dizang' }
+          totalDizang: { $sum: '$dizang' },
           totalYaoshi: { $sum: '$yaoshi' } // 添加药师经统计
         }}
       ]).toArray()
@@ -417,15 +417,15 @@ router.get('/stats', ensureDatabase, async (req, res) => {
       totalGuanyin: 0,
       totalPuxian: 0,
       totalDizang: 0,
-      totalYaoshi: 0
+      totalYaoshi: 0 // 添加药师经
     };
     
     const totalClassics = classicsTotal.totalDiamond + 
                          classicsTotal.totalAmitabha + 
                          classicsTotal.totalGuanyin + 
                          classicsTotal.totalPuxian + 
-                         classicsTotal.totalDizan +
-                          classicsTotal.totalYaoshi; // 添加药师经
+                         classicsTotal.totalDizang +
+                         classicsTotal.totalYaoshi; // 添加药师经
     
     const stats = {
       totalRecords: totalCount,
@@ -469,7 +469,7 @@ router.get('/export/csv', ensureDatabase, async (req, res) => {
       .sort({ submittedAt: -1 })
       .toArray();
     
-    // 构建CSV内容
+    // 构建CSV内容 - 添加药师经列
     const headers = [
       '日期',
       '姓名',
@@ -493,11 +493,12 @@ router.get('/export/csv', ensureDatabase, async (req, res) => {
     csvContent += headers.join(',') + '\n';
     
     records.forEach((item) => {
+      // 计算经典总数 - 包含药师经
       const totalClassics = (item.diamond || 0) + 
                            (item.amitabha || 0) + 
                            (item.guanyin || 0) + 
                            (item.puxian || 0) + 
-                           (item.dizang || 0);
+                           (item.dizang || 0) +
                            (item.yaoshi || 0); // 添加药师经
       
       const row = [
@@ -540,8 +541,6 @@ router.get('/export/csv', ensureDatabase, async (req, res) => {
   }
 });
 
-// 注意：删除了重复的 delete 路由定义
-// 只在前面定义一次即可
 // 直接查询数据库状态
 router.get('/debug/db-status', ensureDatabase, async (req, res) => {
   try {
@@ -629,4 +628,5 @@ router.get('/debug/query', ensureDatabase, async (req, res) => {
     });
   }
 });
+
 module.exports = router;
